@@ -3,7 +3,7 @@ html {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow-y: scroll;
 }
 
 body {
@@ -68,7 +68,7 @@ a{
 }
 /*navbar*/
 .navbar{
-    padding-top: 15px;
+    padding-top: 60px;
     padding-right: 50px;
     padding-bottom: 50px;
     text-align: right;
@@ -257,6 +257,23 @@ footer li {
     display: inline;
     padding:10px;
     list-style: none;
+}
+.ftco-footer {
+  font-size: 20px;
+  padding: 5em 0;
+  padding-bottom: 3em;
+}
+.ftco-section {
+  padding: 2em 0;
+  position: relative;
+}
+
+footer {
+  bottom: 0;
+}
+
+.footer-text {
+  color: #fff;
 }
 /*triangle on about*/
 .box_area_a{
