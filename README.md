@@ -10,5 +10,5 @@ I aim to provide a brief yet tacky introduction to "me" and in the way exibit so
 - Skills and Languages
 - Organizations and Work
 - Projects
-- Timeline
+- GD Portfolio
 - Contact me
