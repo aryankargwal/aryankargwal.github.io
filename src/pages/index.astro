@@ -1,0 +1,279 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import GoodreadsBooks from '../components/GoodreadsBooks.astro';
+import GitHubGraph from '../components/GitHubGraph.astro';
+import ExternalBlog from '../components/ExternalBlog.astro';
+import YouTubeVideos from '../components/YouTubeVideos.astro';
+import { getCollection } from 'astro:content';
+
+// Fetch all projects, sorted by date (newest first)
+const allProjects = await getCollection('projects');
+const projects = allProjects
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout title="Aryan Kargwal - Research Portfolio">
+  <main class="min-h-screen">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container-brutal">
+        <div class="hero-content">
+          <!-- Profile Picture -->
+          <div class="profile-picture">
+            <img 
+              src="/img/aryan-profile.png" 
+              alt="Aryan Kargwal"
+              class="pfp-img"
+            />
+          </div>
+          
+          <!-- Name plate -->
+          <div class="name-plate">
+            <h1 class="glitch-text" data-text="ARYAN KARGWAL">
+              ARYAN KARGWAL
+            </h1>
+          </div>
+          
+          <!-- Tagline -->
+          <div class="tagline-box">
+            <p class="font-mono text-lg md:text-xl">
+              <span class="text-cyber-cyan">[PhD Researcher]</span>
+              <span class="text-off-white/80"> AI & Robotics</span>
+              <br />
+              <span class="text-acid-lime">@</span>
+              <span class="text-off-white"> Polytechnique Montréal</span>
+            </p>
+          </div>
+          
+          <!-- Quick links -->
+          <div class="quick-links">
+            <a href="#lab-bench" class="btn-brutal">
+              Research
+            </a>
+            <a href="/backwater" class="btn-brutal">
+              Backwater
+            </a>
+            <a href="#input" class="btn-brutal">
+              Reading
+            </a>
+            <a href="mailto:aryan.kargwal@polymtl.ca" class="btn-brutal">
+              Contact
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lab Bench: Research Projects (Bento Grid) -->
+    <section id="lab-bench" class="section-brutal">
+      <div class="container-brutal">
+        <!-- Section header -->
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="title-bracket">[</span>
+            THE LAB BENCH
+            <span class="title-bracket">]</span>
+          </h2>
+          <p class="font-mono text-off-white/60">
+            Systems Engineering & Research Prototypes
+          </p>
+        </div>
+
+        <!-- Bento Grid -->
+        <div class="bento-grid">
+          {projects.map((project) => (
+            <ProjectCard
+              title={project.data.title}
+              description={project.data.description}
+              tags={project.data.tags}
+              status={project.data.status}
+              repoUrl={project.data.repoUrl}
+              paperUrl={project.data.paperUrl}
+              demoUrl={project.data.demoUrl}
+              slug={project.slug}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Writing & Insights -->
+    <section id="writing" class="section-brutal">
+      <div class="container-brutal">
+        <ExternalBlog />
+      </div>
+    </section>
+
+    <!-- Video Content -->
+    <section id="videos" class="section-brutal">
+      <div class="container-brutal">
+        <YouTubeVideos />
+      </div>
+    </section>
+
+    <!-- The Input: Currently Reading (Goodreads) -->
+    <section id="input" class="section-brutal">
+      <div class="container-brutal">
+        <GoodreadsBooks />
+      </div>
+    </section>
+
+    <!-- The Output: GitHub Activity -->
+    <section id="output" class="section-brutal">
+      <div class="container-brutal">
+        <GitHubGraph />
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-brutal">
+      <div class="container-brutal">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p class="font-mono text-sm text-off-white/60">
+            Built with Astro 5.0 + Tailwind CSS v4
+          </p>
+          <div class="flex gap-4 font-mono text-sm">
+            <a href="https://github.com/aryankargwal" target="_blank" class="hover:text-cyber-cyan">
+              GitHub
+            </a>
+            <a href="https://linkedin.com/in/aryankargwal" target="_blank" class="hover:text-cyber-cyan">
+              LinkedIn
+            </a>
+            <a href="https://twitter.com/aryankargwal" target="_blank" class="hover:text-cyber-cyan">
+              Twitter
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+</Layout>
+
+<style>
+  /* Hero Section */
+  .hero-section {
+    @apply min-h-screen flex items-center justify-center;
+    @apply pt-20 pb-32;
+  }
+  
+  .hero-content {
+    @apply flex flex-col items-center gap-8;
+  }
+  
+   /* Name plate with glitch effect */
+   .name-plate {
+     @apply relative;
+   }
+   
+   /* Profile Picture */
+   .profile-picture {
+     @apply mb-4;
+   }
+
+   .pfp-img {
+     @apply w-40 h-40 rounded-full;
+     @apply border-brutal border-black;
+     @apply shadow-hard hover:shadow-hard-cyan;
+     @apply transition-all duration-300;
+     @apply object-cover;
+   }
+
+   .pfp-img:hover {
+     @apply -translate-y-1;
+   }
+   
+   .glitch-text {
+     @apply text-6xl md:text-8xl font-black;
+     @apply text-off-white;
+     position: relative;
+     text-shadow: 
+       2px 2px 0 #00f3ff,
+       -2px -2px 0 #ff0055;
+   }
+  
+  .glitch-text:hover {
+    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  }
+  
+  @keyframes glitch {
+    0% {
+      text-shadow: 
+        2px 2px 0 #00f3ff,
+        -2px -2px 0 #ff0055;
+    }
+    25% {
+      text-shadow: 
+        -2px 2px 0 #ff0055,
+        2px -2px 0 #00f3ff;
+    }
+    50% {
+      text-shadow: 
+        2px -2px 0 #ccff00,
+        -2px 2px 0 #00f3ff;
+    }
+    75% {
+      text-shadow: 
+        -2px -2px 0 #00f3ff,
+        2px 2px 0 #ff0055;
+    }
+    100% {
+      text-shadow: 
+        2px 2px 0 #00f3ff,
+        -2px -2px 0 #ff0055;
+    }
+  }
+  
+  /* Tagline box */
+  .tagline-box {
+    @apply border-brutal border-black bg-dark-grey;
+    @apply px-8 py-6 shadow-hard;
+    @apply text-center;
+  }
+  
+  /* Quick links */
+  .quick-links {
+    @apply flex flex-wrap gap-4 justify-center;
+  }
+  
+  /* Container */
+  .container-brutal {
+    @apply max-w-7xl mx-auto px-6 md:px-12;
+  }
+  
+  /* Section */
+  .section-brutal {
+    @apply py-20;
+  }
+  
+  /* Section header */
+  .section-header {
+    @apply mb-12 text-center;
+  }
+  
+  .section-title {
+    @apply text-4xl md:text-5xl font-black mb-4;
+    @apply text-off-white;
+  }
+  
+  .title-bracket {
+    @apply text-cyber-cyan;
+  }
+  
+  /* Bento Grid */
+  .bento-grid {
+    @apply grid gap-6;
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  /* Make first item span 2 columns on larger screens */
+  .bento-grid > :first-child {
+    @apply md:col-span-2;
+  }
+  
+  /* Footer */
+  .footer-brutal {
+    @apply border-t-brutal border-black bg-dark-grey;
+    @apply py-8 mt-20;
+  }
+</style>

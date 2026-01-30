@@ -1,0 +1,105 @@
+---
+import contentData from '../data/content.json';
+
+interface TechnicalPost {
+  title: string;
+  platform: string;
+  category: string;
+  url: string;
+}
+
+const posts: TechnicalPost[] = contentData.technical_blogs;
+---
+
+<section class="technical-blogs">
+  <div class="section-header">
+    <h3 class="text-2xl font-bold mb-2">
+      <span class="text-cyber-cyan">[</span>
+      Technical Blogs
+      <span class="text-cyber-cyan">]</span>
+    </h3>
+    <p class="font-mono text-sm text-off-white/60 mb-6">
+      Deep Dives & Engineering
+    </p>
+  </div>
+
+  <div class="blogs-grid">
+    {posts.map((post) => (
+      <a 
+        href={post.url}
+        target="_blank"
+        rel="noopener"
+        class="blog-card"
+      >
+        <div class="card-header">
+          <span class="platform-badge">{post.platform}</span>
+        </div>
+        <div class="card-body">
+          <h4 class="blog-title font-mono font-semibold mb-3">
+            {post.title}
+          </h4>
+          <div class="category-tag-bottom">
+            <span class="tag-icon">#</span>
+            {post.category}
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .technical-blogs {
+    @apply mb-12;
+  }
+
+  .section-header {
+    @apply mb-6;
+  }
+
+  .blogs-grid {
+    @apply grid gap-6;
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .blog-card {
+    @apply border-brutal border-black bg-dark-grey;
+    @apply shadow-hard hover:shadow-hard-cyan;
+    @apply transition-all duration-200;
+    @apply cursor-pointer overflow-hidden;
+  }
+
+  .blog-card:hover {
+    @apply -translate-y-2;
+  }
+
+  .blog-card:active {
+    @apply shadow-hard-collapsed translate-x-1 translate-y-1;
+  }
+
+  .card-header {
+    @apply border-b-brutal border-black bg-graphite p-3;
+  }
+
+  .platform-badge {
+    @apply px-2 py-1 bg-cyber-cyan text-black font-mono text-xs font-bold uppercase;
+    @apply border-brutal border-black inline-block;
+  }
+
+  .card-body {
+    @apply p-4 bg-dark-grey;
+  }
+
+  .blog-title {
+    @apply text-off-white text-sm line-clamp-2;
+    min-height: 2.5rem;
+  }
+
+  .category-tag-bottom {
+    @apply font-mono text-xs text-cyber-cyan uppercase;
+  }
+
+  .tag-icon {
+    @apply text-acid-lime mr-1;
+  }
+</style>

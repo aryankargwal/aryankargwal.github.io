@@ -1,0 +1,321 @@
+---
+// Blog Carousel Component
+// Displays featured blogs in a horizontal carousel with manual navigation
+// Features ASCII art patterns with mathematical functions
+
+import { generateDeterministicAsciiArt } from '../utils/mathAsciiGenerator';
+import content from '../data/content.json';
+
+interface BlogItem {
+  title: string;
+  platform: string;
+  category?: string;
+  url: string;
+  date?: string;
+  excerpt?: string;
+  featured?: boolean;
+}
+
+// Combine all blog sources and filter featured ones, sorted by date
+const allBlogs: BlogItem[] = [
+  ...content.systems_writing.map(blog => ({ ...blog, type: 'systems' })),
+  ...content.technical_blogs.map(blog => ({ ...blog, type: 'technical' })),
+  ...content.research_talks.map(blog => ({ ...blog, type: 'research' }))
+].filter(blog => blog.featured).sort((a, b) => {
+  const dateA = new Date(a.date || '2000-01-01').getTime();
+  const dateB = new Date(b.date || '2000-01-01').getTime();
+  return dateB - dateA;
+});
+
+// Generate ASCII art for each blog (deterministic based on title)
+const blogsWithArt = allBlogs.map((blog, index) => ({
+  ...blog,
+  ascii: generateDeterministicAsciiArt(blog.title),
+  cardNumber: String(index + 1).padStart(2, '0')
+}));
+---
+
+<div class="blog-carousel-wrapper">
+  <div class="carousel-container">
+    <div class="carousel-track" id="carouselTrack">
+      {blogsWithArt.map((blog) => (
+        <a href={blog.url} target="_blank" rel="noopener" class="blog-card">
+          <div class="card-number">{blog.cardNumber}</div>
+          
+          <div class="card-content">
+            <div class="card-header">
+              <h3 class="blog-title">{blog.title}</h3>
+              <p class="blog-meta">
+                <span class="platform">{blog.platform}</span>
+                {blog.date && <span class="date">{new Date(blog.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>}
+              </p>
+            </div>
+            
+            {blog.excerpt && (
+              <p class="blog-excerpt">{blog.excerpt}</p>
+            )}
+            
+            <div class="card-category">
+              <span class="category-badge">{blog.category || 'Featured'}</span>
+            </div>
+          </div>
+          
+          <div class="card-ascii">
+            <pre class="ascii-art" style={`color: ${blog.ascii.color};`}>{blog.ascii.pattern}</pre>
+            <p class="ascii-function">{blog.ascii.functionName}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <!-- Navigation Controls -->
+  <div class="carousel-controls">
+    <button class="nav-button nav-prev" id="navPrev" aria-label="Previous blog">
+      <span class="arrow">◀</span>
+    </button>
+    
+    <div class="carousel-progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <button class="nav-button nav-next" id="navNext" aria-label="Next blog">
+      <span class="arrow">▶</span>
+    </button>
+  </div>
+</div>
+
+<script is:inline>
+  // Carousel configuration
+  const CARD_WIDTH = 280; // pixels per card
+  const CARDS_PER_VIEW = {
+    desktop: 5,
+    tablet: 3,
+    mobile: 1
+  };
+  
+  const track = document.getElementById('carouselTrack');
+  const navPrev = document.getElementById('navPrev');
+  const navNext = document.getElementById('navNext');
+  const progressBar = document.getElementById('progressBar');
+  
+  let currentPosition = 0;
+  let cardsPerView = CARDS_PER_VIEW.desktop;
+  
+  function getCardsPerView() {
+    const width = window.innerWidth;
+    if (width < 768) return CARDS_PER_VIEW.mobile;
+    if (width < 1024) return CARDS_PER_VIEW.tablet;
+    return CARDS_PER_VIEW.desktop;
+  }
+  
+  function updateCardsPerView() {
+    cardsPerView = getCardsPerView();
+  }
+  
+  function getTotalCards() {
+    return track.querySelectorAll('.blog-card').length;
+  }
+  
+  function updateProgressBar() {
+    const totalCards = getTotalCards();
+    const maxScroll = Math.max(0, totalCards - cardsPerView);
+    const progress = maxScroll > 0 ? (currentPosition / maxScroll) * 100 : 0;
+    progressBar.style.width = progress + '%';
+  }
+  
+  function scrollCarousel(direction) {
+    const totalCards = getTotalCards();
+    const maxScroll = Math.max(0, totalCards - cardsPerView);
+    
+    if (direction === 'next') {
+      currentPosition = Math.min(currentPosition + 1, maxScroll);
+    } else {
+      currentPosition = Math.max(currentPosition - 1, 0);
+    }
+    
+    const offset = -currentPosition * CARD_WIDTH;
+    track.style.transform = `translateX(${offset}px)`;
+    updateProgressBar();
+  }
+  
+  // Event listeners
+  navNext.addEventListener('click', () => scrollCarousel('next'));
+  navPrev.addEventListener('click', () => scrollCarousel('prev'));
+  
+  // Handle responsive resize
+  window.addEventListener('resize', () => {
+    updateCardsPerView();
+    // Recalculate position in case max scroll changed
+    const totalCards = getTotalCards();
+    const maxScroll = Math.max(0, totalCards - cardsPerView);
+    currentPosition = Math.min(currentPosition, maxScroll);
+    const offset = -currentPosition * CARD_WIDTH;
+    track.style.transform = `translateX(${offset}px)`;
+    updateProgressBar();
+  });
+  
+  // Initialize
+  updateCardsPerView();
+  updateProgressBar();
+</script>
+
+<style>
+  .blog-carousel-wrapper {
+    @apply mb-12;
+  }
+
+  .carousel-container {
+    @apply w-full overflow-hidden border-brutal border-black bg-dark-grey shadow-hard;
+    @apply mb-6;
+  }
+
+  .carousel-track {
+    @apply flex gap-4 p-6;
+    @apply transition-transform duration-300 ease-out;
+    width: fit-content;
+  }
+
+  .blog-card {
+    @apply flex-shrink-0 border-brutal border-black bg-graphite shadow-hard;
+    @apply hover:shadow-hard-cyan transition-all duration-200 cursor-pointer;
+    @apply relative overflow-hidden;
+    width: 280px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-card:hover {
+    @apply -translate-y-1;
+  }
+
+  .card-number {
+    @apply absolute top-3 left-3 text-2xl font-black text-cyber-cyan font-mono;
+    @apply opacity-50;
+  }
+
+  .card-content {
+    @apply flex-1 p-5 pt-12 flex flex-col gap-3;
+  }
+
+  .card-header {
+    @apply flex-1;
+  }
+
+  .blog-title {
+    @apply text-sm font-bold font-mono text-off-white mb-2;
+    @apply line-clamp-3;
+  }
+
+  .blog-meta {
+    @apply text-xs font-mono text-off-white/60 space-x-2;
+  }
+
+  .platform {
+    @apply text-cyber-cyan;
+  }
+
+  .date {
+    @apply text-acid-lime;
+  }
+
+  .blog-excerpt {
+    @apply text-xs font-mono text-off-white/70;
+    @apply line-clamp-2;
+    @apply leading-relaxed;
+  }
+
+  .card-category {
+    @apply mt-auto;
+  }
+
+  .category-badge {
+    @apply inline-block px-2 py-1 bg-graphite border-brutal border-black;
+    @apply text-xs font-mono font-semibold text-acid-lime;
+  }
+
+  .card-ascii {
+    @apply border-t-brutal border-black p-3 bg-dark-grey;
+    @apply text-center;
+  }
+
+  .ascii-art {
+    @apply font-mono text-xs leading-tight;
+    @apply m-0 p-0;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
+
+  .ascii-function {
+    @apply text-xs font-mono text-off-white/60 mt-2 mb-0;
+    @apply uppercase tracking-wider;
+  }
+
+  /* Carousel Controls */
+  .carousel-controls {
+    @apply flex items-center gap-4;
+    @apply px-6 py-4 border-brutal border-black border-t-brutal bg-graphite;
+  }
+
+  .nav-button {
+    @apply w-10 h-10 flex items-center justify-center;
+    @apply border-brutal border-black bg-dark-grey cursor-pointer;
+    @apply transition-all duration-200;
+    @apply hover:bg-graphite hover:shadow-hard-cyan;
+    @apply font-bold text-lg text-cyber-cyan font-mono;
+  }
+
+  .nav-button:active {
+    @apply shadow-hard-collapsed translate-y-1;
+  }
+
+  .carousel-progress {
+    @apply flex-1 h-1 bg-dark-grey border-brutal border-black;
+    @apply overflow-hidden;
+  }
+
+  .progress-bar {
+    @apply h-full bg-gradient-to-r from-cyber-cyan to-acid-lime;
+    @apply transition-all duration-300;
+    width: 0%;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .blog-card {
+      width: 280px;
+      min-height: 350px;
+    }
+
+    .card-content {
+      @apply p-4 pt-10;
+    }
+
+    .blog-title {
+      @apply text-xs;
+    }
+
+    .blog-excerpt {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .carousel-track {
+      @apply p-4 gap-3;
+    }
+
+    .blog-card {
+      width: 280px;
+    }
+
+    .card-number {
+      @apply text-xl;
+    }
+
+    .card-content {
+      @apply p-3 pt-8;
+    }
+  }
+</style>

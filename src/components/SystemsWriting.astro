@@ -1,0 +1,107 @@
+---
+import contentData from '../data/content.json';
+
+interface SystemsPost {
+  title: string;
+  platform: string;
+  category: string;
+  url: string;
+}
+
+const posts: SystemsPost[] = contentData.systems_writing;
+---
+
+<section class="systems-writing">
+  <div class="section-header">
+    <h3 class="text-2xl font-bold mb-2">
+      <span class="text-acid-lime">[</span>
+      Systems Writing
+      <span class="text-acid-lime">]</span>
+    </h3>
+    <p class="font-mono text-sm text-off-white/60 mb-6">
+      Strategy, Product, & Architecture
+    </p>
+  </div>
+
+  <div class="posts-list">
+    {posts.map((post) => (
+      <a 
+        href={post.url}
+        target="_blank"
+        rel="noopener"
+        class="post-item"
+      >
+        <div class="post-content">
+          <div class="post-header">
+            <span class="category-tag">{post.category}</span>
+            <span class="platform-name font-mono text-xs text-off-white/60">{post.platform}</span>
+          </div>
+          <h4 class="post-title font-mono font-semibold">
+            {post.title}
+          </h4>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .systems-writing {
+    @apply mb-12;
+  }
+
+  .section-header {
+    @apply mb-6;
+  }
+
+  .posts-list {
+    @apply flex flex-col gap-3;
+  }
+
+  .post-item {
+    @apply border-brutal border-black bg-dark-grey;
+    @apply shadow-hard hover:shadow-hard-lime;
+    @apply transition-all duration-200;
+    @apply cursor-pointer;
+    @apply p-4 flex items-center justify-between gap-4;
+  }
+
+  .post-item:hover {
+    @apply -translate-x-1;
+  }
+
+  .post-item:active {
+    @apply shadow-hard-collapsed translate-x-1 translate-y-1;
+  }
+
+  .post-content {
+    @apply flex-1;
+  }
+
+  .post-header {
+    @apply flex items-center gap-3 mb-2;
+  }
+
+  .category-tag {
+    @apply px-2 py-1 bg-acid-lime text-black font-mono text-xs font-bold uppercase;
+    @apply border-brutal border-black;
+  }
+
+  .platform-name {
+    @apply text-off-white/60;
+  }
+
+  .post-title {
+    @apply text-off-white text-sm;
+  }
+
+  .arrow {
+    @apply text-acid-lime text-2xl font-bold flex-shrink-0;
+    @apply transition-transform duration-200;
+  }
+
+  .post-item:hover .arrow {
+    @apply translate-x-1;
+  }
+</style>

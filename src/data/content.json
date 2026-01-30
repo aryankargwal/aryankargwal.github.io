@@ -1,0 +1,156 @@
+{
+  "personal": {
+    "name": "Aryan Kargwal",
+    "title": "PhD Researcher",
+    "field": "AI & Robotics",
+    "institution": "Polytechnique Montréal",
+    "email": "aryan.kargwal@polymtl.ca",
+    "social": {
+      "github": "aryankargwal",
+      "linkedin": "aryankargwal",
+      "twitter": "aryankargwal",
+      "goodreads": "185223761"
+    }
+  },
+  
+   "research_talks": [
+     {
+       "title": "AI for Safe and Efficient Robot Path Planning",
+       "platform": "YouTube",
+       "type": "PhD Talk",
+       "url": "https://www.youtube.com/watch?v=zmUqyO2wAq4",
+       "date": "2024-10-15",
+       "excerpt": "Exploring formal verification methods for safe and efficient autonomous robot path planning using AI techniques.",
+       "badge": "Formal Verification",
+       "featured": true
+     },
+     {
+       "title": "Logging ReACT Agentic Pipelines",
+       "platform": "YouTube",
+       "type": "Demo",
+       "url": "https://www.youtube.com/watch?v=B_RHpA-NRVk",
+       "date": "2024-09-20",
+       "excerpt": "Practical demonstration of logging and monitoring ReACT-based agentic pipelines in production environments.",
+       "badge": "Agent Ops",
+       "featured": true
+     }
+   ],
+
+   "systems_writing": [
+     {
+       "title": "Benchmarks Are Broken: 5 Operator Metrics",
+       "platform": "SeedToScale",
+       "category": "Strategy",
+       "url": "https://www.seedtoscale.com/blog/benchmarks-are-broken-5-operator-metrics-every-ai-exec-should-track",
+       "date": "2024-12-15",
+       "excerpt": "Explore the 5 critical metrics AI executives should track beyond traditional benchmarks to measure real operational performance.",
+       "featured": true
+     },
+     {
+       "title": "The Platform Gravity Problem",
+       "platform": "SeedToScale",
+       "category": "Market Analysis",
+       "url": "https://www.seedtoscale.com/blog/the-platform-gravity-problem-why-the-middle-is-collapsing-in-ai",
+       "date": "2024-11-20",
+       "excerpt": "Analyzing why the middle market is collapsing in AI and how platform gravity is reshaping competitive dynamics.",
+       "featured": true
+     },
+     {
+       "title": "Frugal Innovation in AI Products",
+       "platform": "SeedToScale",
+       "category": "Product",
+       "url": "https://www.seedtoscale.com/blog/frugal-innovation-why-constraint-breeds-better-ai-products",
+       "date": "2024-10-30",
+       "excerpt": "How constraints and frugal innovation principles lead to better, more efficient AI products in competitive markets.",
+       "featured": true
+     },
+     {
+       "title": "Agent Frameworks: A Handbook",
+       "platform": "Arize AI",
+       "category": "Architecture",
+       "url": "https://arize.com/ai-agents/agent-frameworks/",
+       "date": "2024-09-15",
+       "excerpt": "Comprehensive guide to modern AI agent frameworks, their architectures, and best practices for implementation.",
+       "featured": true
+     },
+     {
+       "title": "Observability-Driven Sandboxing",
+       "platform": "Arize AI",
+       "category": "Security",
+       "url": "https://arize.com/blog/how-observability-driven-sandboxing-secures-ai-agents/",
+       "date": "2024-08-20",
+       "excerpt": "Securing AI agents through observability-driven sandboxing: techniques for monitoring and controlling agent behavior.",
+       "featured": true
+     }
+   ],
+
+   "technical_blogs": [
+     {
+       "title": "DeepSeek-R1: Redefining RL in AI",
+       "platform": "Dev.to",
+       "category": "RL",
+       "url": "https://dev.to/aryankargwal/deepseek-r1-redefining-the-reinforcement-learning-in-ai-47e6",
+       "date": "2024-12-01",
+       "excerpt": "Deep dive into how DeepSeek-R1 is revolutionizing reinforcement learning approaches in modern AI systems.",
+       "featured": true
+     },
+     {
+       "title": "Top 7 Agent Supervision Platforms",
+       "platform": "Dev.to",
+       "category": "Agent Ops",
+       "url": "https://dev.to/aryankargwal/top-7-ai-agent-supervision-platforms-in-2025",
+       "date": "2025-01-15",
+       "excerpt": "Comparative analysis of the best AI agent supervision platforms available in 2025 for production systems.",
+       "featured": true
+     },
+     {
+       "title": "How to Build a RAG Chatbot",
+       "platform": "Botpress",
+       "category": "Engineering",
+       "url": "https://botpress.com/blog/build-rag-chatbot",
+       "date": "2024-07-10",
+       "excerpt": "Step-by-step engineering guide to building production-ready RAG-powered chatbot applications.",
+       "featured": false
+     }
+   ],
+
+  "blog_posts": [
+    {
+      "title": "Your First Blog Post Title",
+      "platform": "Medium",
+      "url": "https://medium.com/@aryankargwal/your-article",
+      "date": "2024-01-15",
+      "description": "Brief description of what this article is about. Keep it to 2-3 sentences max.",
+      "tags": ["AI", "Research", "Systems"],
+      "featured": false
+    },
+    {
+      "title": "Another Great Article",
+      "platform": "Dev.to",
+      "url": "https://dev.to/aryankargwal/another-article",
+      "date": "2023-12-10",
+      "description": "Another insightful piece about your research or technical work.",
+      "tags": ["Robotics", "ML", "Engineering"],
+      "featured": false
+    }
+  ],
+
+  "youtube_videos": [
+    {
+      "title": "Your Video Title Here",
+      "videoId": "dQw4w9WgXcQ",
+      "date": "2024-01-20",
+      "description": "Brief description of what this video covers.",
+      "tags": ["Tutorial", "Research", "Demo"],
+      "featured": false
+    },
+    {
+      "title": "Another Awesome Video",
+      "videoId": "jNQXAC9IVRw",
+      "date": "2023-11-15",
+      "description": "Explanation or walkthrough of your project or research.",
+      "tags": ["Presentation", "Technical", "Deep Dive"],
+      "featured": false
+    }
+  ]
+}

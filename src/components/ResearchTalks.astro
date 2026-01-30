@@ -1,0 +1,152 @@
+---
+import contentData from '../data/content.json';
+
+interface ResearchTalk {
+  title: string;
+  platform: string;
+  type: string;
+  url: string;
+  badge: string;
+}
+
+const talks: ResearchTalk[] = contentData.research_talks;
+
+// Extract YouTube video ID from URL
+function getYouTubeId(url: string): string {
+  const match = url.match(/[?&]v=([^&]+)/);
+  return match ? match[1] : '';
+}
+---
+
+<section class="research-talks">
+  <div class="section-header-inline">
+    <h3 class="text-2xl font-bold mb-6">
+      <span class="text-error-red">[</span>
+      Research Talks
+      <span class="text-error-red">]</span>
+    </h3>
+  </div>
+
+  <div class="talks-grid">
+    {talks.map((talk) => {
+      const videoId = getYouTubeId(talk.url);
+      return (
+        <a 
+          href={talk.url}
+          target="_blank"
+          rel="noopener"
+          class="talk-card"
+        >
+          <!-- YouTube Thumbnail -->
+          <div class="talk-thumbnail">
+            <img 
+              src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+              alt={talk.title}
+              class="thumbnail-image"
+              loading="lazy"
+            />
+            <div class="play-overlay">
+              <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Talk Info -->
+          <div class="talk-info">
+            <div class="badge-container">
+              <span class="type-badge">{talk.type}</span>
+              <span class="tech-badge">{talk.badge}</span>
+            </div>
+            <h4 class="talk-title font-mono font-semibold">
+              {talk.title}
+            </h4>
+            <p class="talk-platform font-mono text-xs text-off-white/60">
+              {talk.platform}
+            </p>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .research-talks {
+    @apply mb-12;
+  }
+
+  .section-header-inline {
+    @apply flex justify-between items-center mb-6;
+  }
+
+  .talks-grid {
+    @apply grid gap-6;
+    @apply grid-cols-1 md:grid-cols-2;
+  }
+
+  .talk-card {
+    @apply border-brutal border-black bg-dark-grey;
+    @apply shadow-hard hover:shadow-hard-red;
+    @apply transition-all duration-200;
+    @apply cursor-pointer overflow-hidden;
+  }
+
+  .talk-card:hover {
+    @apply -translate-y-2;
+  }
+
+  .talk-card:active {
+    @apply shadow-hard-collapsed translate-x-1 translate-y-1;
+  }
+
+  .talk-card:hover .play-overlay {
+    @apply opacity-100;
+  }
+
+  .talk-thumbnail {
+    @apply relative w-full bg-black;
+    aspect-ratio: 16/9;
+    @apply border-b-brutal border-black;
+    overflow: hidden;
+  }
+
+  .thumbnail-image {
+    @apply w-full h-full object-cover;
+  }
+
+  .play-overlay {
+    @apply absolute inset-0 flex items-center justify-center;
+    @apply bg-black/50 opacity-0 transition-opacity duration-200;
+  }
+
+  .play-icon {
+    @apply w-16 h-16 text-error-red;
+  }
+
+  .talk-info {
+    @apply p-4 bg-graphite;
+  }
+
+  .badge-container {
+    @apply flex gap-2 mb-3 flex-wrap;
+  }
+
+  .type-badge {
+    @apply px-2 py-1 bg-error-red text-black font-mono text-xs font-bold uppercase;
+    @apply border-brutal border-black;
+  }
+
+  .tech-badge {
+    @apply px-2 py-1 bg-dark-grey border-brutal border-black;
+    @apply text-cyber-cyan font-mono text-xs uppercase;
+  }
+
+  .talk-title {
+    @apply text-off-white text-sm mb-2 line-clamp-2;
+  }
+
+  .talk-platform {
+    @apply text-off-white/60;
+  }
+</style>

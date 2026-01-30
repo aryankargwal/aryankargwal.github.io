@@ -1,0 +1,240 @@
+---
+import contentData from '../data/content.json';
+
+interface Video {
+  title: string;
+  videoId?: string;
+  url?: string;
+  date?: string;
+  description?: string;
+  tags?: string[];
+  type?: string;
+  badge?: string;
+  featured?: boolean;
+}
+
+// Combine youtube videos and research talks
+let allVideos: Video[] = [];
+
+// Add youtube videos
+if (contentData.youtube_videos) {
+  allVideos = [...allVideos, ...contentData.youtube_videos];
+}
+
+// Add research talks (extract videoId from URL)
+if (contentData.research_talks) {
+  allVideos = [...allVideos, ...contentData.research_talks.map(talk => {
+    const match = talk.url.match(/[?&]v=([^&]+)/);
+    const videoId = match ? match[1] : '';
+    return {
+      title: talk.title,
+      videoId: videoId,
+      url: talk.url,
+      date: '2025-01-01',
+      tags: talk.badge ? [talk.badge] : [],
+      type: talk.type,
+      featured: talk.featured
+    };
+  })];
+}
+
+// Filter to only featured videos
+const featuredVideos = allVideos.filter(v => v.featured !== false);
+
+// Sort by date (newest first) and limit to 3
+const sortedVideos = featuredVideos.sort((a, b) => {
+  const dateA = a.date ? new Date(a.date).getTime() : 0;
+  const dateB = b.date ? new Date(b.date).getTime() : 0;
+  return dateB - dateA;
+}).slice(0, 3); // Limit to 3 featured videos
+
+function getVideoLink(video: Video): string {
+  if (video.url) return video.url;
+  if (video.videoId) return `https://www.youtube.com/watch?v=${video.videoId}`;
+  return '#';
+}
+---
+
+<section class="youtube-section">
+  <div class="section-header-inline">
+    <div>
+      <h3 class="text-2xl font-bold mb-2">
+        <span class="text-error-red">[</span>
+        Video Content
+        <span class="text-error-red">]</span>
+      </h3>
+      <p class="font-mono text-sm text-off-white/60">
+        Talks, demos & technical content
+      </p>
+    </div>
+    <a 
+      href={`https://youtube.com/@${contentData.personal.social.github}`}
+      target="_blank"
+      rel="noopener"
+      class="text-sm font-mono hover:text-error-red"
+    >
+      YouTube Channel →
+    </a>
+  </div>
+
+  {sortedVideos.length > 0 ? (
+    <div class="videos-grid">
+      {sortedVideos.map((video) => {
+        const videoLink = getVideoLink(video);
+        return (
+          <a 
+            href={videoLink}
+            target="_blank"
+            rel="noopener"
+            class="video-card group"
+          >
+            <!-- Thumbnail -->
+            <div class="thumbnail-wrapper">
+              {video.videoId && (
+                <img 
+                  src={`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`}
+                  alt={video.title}
+                  class="thumbnail"
+                  loading="lazy"
+                />
+              )}
+              <!-- Play button overlay -->
+              <div class="play-overlay">
+                <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Video info -->
+            <div class="video-info">
+              {video.type && (
+                <span class="video-type">
+                  {video.type}
+                </span>
+              )}
+              
+              <h4 class="video-title text-base font-bold mt-2 mb-2 group-hover:text-cyber-cyan transition-colors">
+                {video.title}
+              </h4>
+
+              {video.description && (
+                <p class="video-description font-mono text-xs text-off-white/70 mb-3">
+                  {video.description}
+                </p>
+              )}
+
+              <!-- Tags -->
+              {video.tags && video.tags.length > 0 && (
+                <div class="flex flex-wrap gap-1">
+                  {video.tags.slice(0, 3).map(tag => (
+                    <span class="tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  ) : (
+    <p class="font-mono text-sm text-off-white/60 text-center py-8">
+      No featured videos yet. Check back soon!
+    </p>
+  )}
+</section>
+
+<style>
+  .youtube-section {
+    @apply mb-12;
+  }
+
+  .section-header-inline {
+    @apply flex justify-between items-start mb-6;
+  }
+
+  .videos-grid {
+    @apply grid gap-4;
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .video-card {
+    @apply border-brutal border-black bg-dark-grey;
+    @apply shadow-hard hover:shadow-hard-red;
+    @apply transition-all duration-200;
+    @apply overflow-hidden;
+    @apply cursor-pointer;
+  }
+
+  .video-card:hover {
+    @apply -translate-y-1;
+  }
+
+  .video-card:active {
+    @apply shadow-hard-collapsed translate-x-1 translate-y-1;
+  }
+
+  .thumbnail-wrapper {
+    @apply relative aspect-video bg-black;
+    @apply border-b-brutal border-black;
+  }
+
+  .thumbnail {
+    @apply w-full h-full object-cover;
+    @apply transition-all duration-300;
+  }
+
+  .video-card:hover .thumbnail {
+    @apply opacity-80;
+  }
+
+  .play-overlay {
+    @apply absolute inset-0;
+    @apply flex items-center justify-center;
+    @apply transition-all duration-300;
+    @apply pointer-events-none;
+  }
+
+  .play-icon {
+    @apply w-16 h-16 text-off-white;
+    @apply transition-all duration-300;
+    filter: drop-shadow(2px 2px 0px #000);
+  }
+
+  .video-card:hover .play-icon {
+    @apply text-error-red scale-110;
+    filter: drop-shadow(4px 4px 0px #000);
+  }
+
+  .video-info {
+    @apply p-4 bg-graphite;
+  }
+
+  .video-type {
+    @apply inline-block px-2 py-1 bg-error-red text-black;
+    @apply font-mono text-xs font-bold uppercase border-brutal border-black;
+  }
+
+  .video-title {
+    @apply text-off-white;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .video-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .tag {
+    @apply px-2 py-0.5 border border-off-white/20;
+    @apply text-xs font-mono uppercase tracking-wide;
+    @apply bg-dark-grey text-off-white/80;
+  }
+</style>

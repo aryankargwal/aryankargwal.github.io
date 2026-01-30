@@ -1,0 +1,180 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  tags: string[];
+  status: 'Production' | 'Research Prototype' | 'Archived';
+  repoUrl?: string;
+  paperUrl?: string;
+  demoUrl?: string;
+  slug: string;
+}
+
+const { title, description, tags, status, repoUrl, paperUrl, demoUrl, slug } = Astro.props;
+
+// Status badge styling
+const statusStyles = {
+  'Production': 'bg-acid-lime text-black border-black',
+  'Research Prototype': 'bg-cyber-cyan text-black border-black',
+  'Archived': 'bg-error-red text-off-white border-black'
+};
+---
+
+<article class="project-card group relative">
+  <!-- Status sticker (taped on aesthetic) -->
+  <div class={`status-sticker ${statusStyles[status]}`}>
+    <span class="font-mono text-xs font-semibold uppercase tracking-wider">
+      {status}
+    </span>
+    <!-- Tape effect -->
+    <div class="tape tape-left"></div>
+    <div class="tape tape-right"></div>
+  </div>
+
+  <!-- Card content -->
+  <div class="card-inner">
+    <!-- Abstract pattern background (CSS-generated) -->
+    <div class="pattern-bg"></div>
+    
+    <div class="content-wrapper">
+      <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-cyan transition-colors">
+        {title}
+      </h3>
+      
+      <p class="font-mono text-sm text-off-white/80 mb-4 line-clamp-3">
+        {description}
+      </p>
+      
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        {tags.slice(0, 3).map(tag => (
+          <span class="tag">
+            {tag}
+          </span>
+        ))}
+      </div>
+      
+      <!-- Links -->
+      <div class="flex gap-3 text-sm font-mono">
+        {repoUrl && (
+          <a href={repoUrl} target="_blank" rel="noopener" class="link-brutal">
+            GitHub →
+          </a>
+        )}
+        {paperUrl && (
+          <a href={paperUrl} target="_blank" rel="noopener" class="link-brutal">
+            Paper →
+          </a>
+        )}
+        {demoUrl && (
+          <a href={demoUrl} target="_blank" rel="noopener" class="link-brutal">
+            Demo →
+          </a>
+        )}
+        <a href={`/projects/${slug}`} class="link-brutal ml-auto">
+          Details →
+        </a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    @apply relative border-brutal border-black bg-dark-grey;
+    @apply shadow-hard hover:shadow-hard-cyan;
+    @apply transition-all duration-200;
+    @apply overflow-hidden;
+  }
+  
+  .project-card:hover {
+    @apply -translate-y-1;
+  }
+  
+  .project-card:active {
+    @apply shadow-hard-collapsed translate-x-1 translate-y-1;
+  }
+  
+  /* Status sticker with tape effect */
+  .status-sticker {
+    @apply absolute top-4 right-4 z-20;
+    @apply px-3 py-1 border-brutal;
+    @apply shadow-hard-sm;
+    @apply rotate-2;
+    transform-origin: center;
+  }
+  
+  /* Tape strips */
+  .tape {
+    @apply absolute w-8 h-4 bg-off-white/20;
+    @apply border border-black/10;
+    top: -8px;
+  }
+  
+  .tape-left {
+    left: -4px;
+    transform: rotate(-25deg);
+  }
+  
+  .tape-right {
+    right: -4px;
+    transform: rotate(25deg);
+  }
+  
+  .card-inner {
+    @apply relative p-6;
+    min-height: 280px;
+  }
+  
+  /* Abstract CSS pattern background */
+  .pattern-bg {
+    @apply absolute inset-0 opacity-10;
+    background-image: 
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        #00f3ff 10px,
+        #00f3ff 12px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 10px,
+        #ff0055 10px,
+        #ff0055 12px
+      );
+    background-size: 100% 100%;
+    transition: opacity 0.3s;
+  }
+  
+  .project-card:hover .pattern-bg {
+    @apply opacity-20;
+  }
+  
+  .content-wrapper {
+    @apply relative z-10;
+  }
+  
+  /* Tag styling */
+  .tag {
+    @apply px-2 py-1 border border-off-white/30;
+    @apply text-xs font-mono uppercase tracking-wide;
+    @apply bg-graphite;
+  }
+  
+  /* Link styling */
+  .link-brutal {
+    @apply text-off-white hover:text-cyber-cyan;
+    @apply transition-colors duration-150;
+    @apply font-semibold;
+  }
+  
+  /* Line clamp utility */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

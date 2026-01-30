@@ -1,0 +1,196 @@
+---
+// Backwater Page - Centralized content hub
+// Features: Featured blog carousel + organized content sections
+
+import Layout from '../layouts/Layout.astro';
+import BlogCarousel from '../components/BlogCarousel.astro';
+import ExternalBlog from '../components/ExternalBlog.astro';
+import GoodreadsBooks from '../components/GoodreadsBooks.astro';
+import YouTubeVideos from '../components/YouTubeVideos.astro';
+import GitHubGraph from '../components/GitHubGraph.astro';
+---
+
+<Layout title="Backwater - Aryan Kargwal">
+  <main class="min-h-screen">
+    <!-- Header Section -->
+    <section class="backwater-header">
+      <div class="container-brutal">
+        <div class="header-content">
+          <h1 class="glitch-text" data-text="BACKWATER">
+            BACKWATER
+          </h1>
+          <p class="tagline">
+            <span class="text-cyber-cyan">[</span>
+            Everything I've Written, Watched & Read
+            <span class="text-cyber-cyan">]</span>
+          </p>
+          <a href="/" class="back-link">
+            ← Back to Home
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Blogs Carousel -->
+    <section class="section-brutal">
+      <div class="container-brutal">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="title-bracket">[</span>
+            FEATURED INSIGHTS
+            <span class="title-bracket">]</span>
+          </h2>
+          <p class="font-mono text-off-white/60">
+            Latest blog posts, articles & talks
+          </p>
+        </div>
+        <BlogCarousel />
+      </div>
+    </section>
+
+    <!-- Writing Section -->
+    <section class="section-brutal">
+      <div class="container-brutal">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="title-bracket">[</span>
+            ALL WRITING
+            <span class="title-bracket">]</span>
+          </h2>
+          <p class="font-mono text-off-white/60">
+            Complete collection of essays, articles & technical deep-dives
+          </p>
+        </div>
+        <ExternalBlog />
+      </div>
+    </section>
+
+    <!-- Reading Section -->
+    <section class="section-brutal">
+      <div class="container-brutal">
+        <GoodreadsBooks />
+      </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="section-brutal">
+      <div class="container-brutal">
+        <YouTubeVideos />
+      </div>
+    </section>
+
+    <!-- GitHub Activity Section -->
+    <section class="section-brutal">
+      <div class="container-brutal">
+        <GitHubGraph />
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-brutal">
+      <div class="container-brutal">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p class="font-mono text-sm text-off-white/60">
+            Built with Astro 5.0 + Tailwind CSS v4
+          </p>
+          <div class="flex gap-4 font-mono text-sm">
+            <a href="https://github.com/aryankargwal" target="_blank" class="hover:text-cyber-cyan">
+              GitHub
+            </a>
+            <a href="https://linkedin.com/in/aryankargwal" target="_blank" class="hover:text-cyber-cyan">
+              LinkedIn
+            </a>
+            <a href="https://twitter.com/aryankargwal" target="_blank" class="hover:text-cyber-cyan">
+              Twitter
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+</Layout>
+
+<style>
+  /* Header Section */
+  .backwater-header {
+    @apply min-h-[50vh] flex items-center justify-center;
+    @apply pt-20 pb-32;
+  }
+
+  .header-content {
+    @apply text-center;
+  }
+
+  .header-content h1 {
+    @apply text-6xl md:text-7xl font-black mb-6;
+    @apply text-off-white;
+    letter-spacing: -2px;
+    text-shadow: 3px 3px 0 #00f3ff, 6px 6px 0 #262626;
+  }
+
+  .tagline {
+    @apply text-lg md:text-xl font-mono mb-8;
+    @apply text-off-white/80;
+  }
+
+  .back-link {
+    @apply inline-block px-4 py-2 border-brutal border-black;
+    @apply bg-graphite text-cyber-cyan font-mono;
+    @apply hover:bg-dark-grey hover:text-acid-lime;
+    @apply transition-all duration-200;
+    display: inline-block;
+  }
+
+  .back-link:active {
+    @apply translate-y-1;
+  }
+
+  /* Container */
+  .container-brutal {
+    @apply max-w-7xl mx-auto px-6 md:px-12;
+  }
+
+  /* Section */
+  .section-brutal {
+    @apply py-20;
+  }
+
+  /* Section header */
+  .section-header {
+    @apply mb-12 text-center;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-5xl font-black mb-4;
+    @apply text-off-white;
+  }
+
+  .title-bracket {
+    @apply text-cyber-cyan;
+  }
+
+  /* Footer */
+  .footer-brutal {
+    @apply border-t-brutal border-black bg-dark-grey;
+    @apply py-8 mt-20;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .backwater-header {
+      @apply min-h-[40vh] pt-10 pb-20;
+    }
+
+    .header-content h1 {
+      @apply text-4xl md:text-5xl;
+    }
+
+    .tagline {
+      @apply text-base md:text-lg;
+    }
+
+    .section-title {
+      @apply text-2xl md:text-3xl;
+    }
+  }
+</style>
