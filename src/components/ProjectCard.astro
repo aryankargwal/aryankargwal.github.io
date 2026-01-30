@@ -97,6 +97,40 @@ const statusStyles = {
   
   /* Status sticker with tape effect */
   .status-sticker {
+    @apply absolute top-4 right-6 z-20;
+    @apply px-3 py-1 border-brutal;
+    @apply shadow-hard-sm;
+    @apply rotate-2;
+    transform-origin: center;
+  }
+  
+  /* Tape strips */
+  .tape {
+    @apply absolute w-8 h-3 bg-off-white/20;
+    @apply border border-black/10;
+    top: -5px;
+  }
+  
+  .tape-left {
+    left: -2px;
+    transform: rotate(-25deg);
+  }
+  
+  .tape-right {
+    right: -2px;
+    transform: rotate(25deg);
+  }
+  
+  .project-card:hover {
+    @apply -translate-y-1;
+  }
+  
+  .project-card:active {
+    @apply shadow-hard-collapsed translate-x-1 translate-y-1;
+  }
+  
+  /* Status sticker with tape effect */
+  .status-sticker {
     @apply absolute top-4 right-4 z-20;
     @apply px-3 py-1 border-brutal;
     @apply shadow-hard-sm;
@@ -122,34 +156,23 @@ const statusStyles = {
   }
   
   .card-inner {
-    @apply relative p-6;
+    @apply relative p-6 pt-16;
     min-height: 280px;
+  }
+  
+  /* Status sticker with tape effect */
+  .status-sticker {
+    @apply absolute top-2 right-4 z-20;
+    @apply px-3 py-1 border-brutal;
+    @apply shadow-hard-sm;
+    @apply rotate-2;
+    transform-origin: center;
   }
   
   /* Abstract CSS pattern background */
   .pattern-bg {
-    @apply absolute inset-0 opacity-10;
-    background-image: 
-      repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        #00f3ff 10px,
-        #00f3ff 12px
-      ),
-      repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 10px,
-        #ff0055 10px,
-        #ff0055 12px
-      );
-    background-size: 100% 100%;
-    transition: opacity 0.3s;
-  }
-  
-  .project-card:hover .pattern-bg {
-    @apply opacity-20;
+    @apply absolute inset-0 opacity-0;
+    background-image: none;
   }
   
   .content-wrapper {

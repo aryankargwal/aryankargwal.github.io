@@ -11,6 +11,20 @@ const GRID_HEIGHT = 8;
 // ASCII characters for different intensities (dark to light)
 const ASCII_CHARS = " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
 
+// 10 distinct colors for grid rotation
+const GRID_COLORS = [
+  '#00f3ff', // cyan
+  '#ccff00', // lime
+  '#ff0055', // hot pink
+  '#ff6b35', // orange
+  '#9b5de5', // purple
+  '#00f5d4', // turquoise
+  '#fee440', // yellow
+  '#f15bb5', // magenta
+  '#00bbf9', // blue
+  '#06ffa5', // mint green
+];
+
 /**
  * Create deterministic hash from string
  */
@@ -373,19 +387,45 @@ const PATTERNS = [
 ];
 
 /**
- * Generate deterministic pattern for a given title
+ * Get next color from rotation (avoiding last 10 used colors)
  */
-export function generateProbabilityGrid(title: string) {
+function getNextColor(usedColors: string[]): { color: string, updated: string[] } {
+  // Find colors not in the last 10 used
+  const availableColors = GRID_COLORS.filter(c => !usedColors.slice(-10).includes(c));
+  
+  // If all colors are in recent history, start fresh with first color
+  const color = availableColors.length > 0 ? availableColors[0] : GRID_COLORS[0];
+  
+  // Update history: add new color and keep last 10
+  const updated = [...usedColors, color].slice(-10);
+  
+  return { color, updated };
+}
+
+/**
+ * Generate deterministic pattern for a given title
+ * @param title - Blog post title to generate pattern from
+ * @param usedColors - Array of recently used colors (optional)
+ * @returns Object with ascii art, pattern name, seed, color, and updated color history
+ */
+export function generateProbabilityGrid(
+  title: string, 
+  usedColors: string[] = []
+): { ascii: string; name: string; seed: number; color: string; usedColors: string[] } {
   const seed = hashString(title);
   const pattern = PATTERNS[seed % PATTERNS.length];
   
   const grid = pattern.fn(seed);
   const ascii = gridToAscii(grid);
   
+  const { color, updated } = getNextColor(usedColors);
+  
   return {
     ascii,
     name: pattern.name,
-    seed
+    seed,
+    color,
+    usedColors: updated
   };
 }
 

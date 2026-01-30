@@ -1,6 +1,5 @@
 ---
 // This component fetches currently reading books from Goodreads RSS feed
-import { getAlgorithmIconWithArt } from '../utils/algorithmIcons';
 
 interface Book {
   title: string;
@@ -162,10 +161,10 @@ try {
 
 <section class="currently-reading">
   <div class="section-header-inline">
-    <h3 class="text-2xl font-bold mb-6">
-      <span class="text-cyber-cyan">[</span>
+    <h3 class="text-3xl font-black mb-6 text-off-white">
+      <span class="text-acid-lime">[</span>
       Currently Reading
-      <span class="text-cyber-cyan">]</span>
+      <span class="text-acid-lime">]</span>
     </h3>
     <a 
       href={`https://www.goodreads.com/user/show/${GOODREADS_USER_ID}`}
@@ -198,10 +197,9 @@ try {
 
     <!-- Books Grid - Currently Reading -->
     <div class="books-container" id="readingContainer">
-      {currentlyReadingBooks.length > 0 ? (
+       {currentlyReadingBooks.length > 0 ? (
         <div class="books-grid">
            {currentlyReadingBooks.map((book: Book) => {
-             const algo = getAlgorithmIconWithArt(book.title);
              return (
                <a 
                  href={book.link}
@@ -228,10 +226,6 @@ try {
                      </p>
                    )}
                  </div>
-                 <div class="book-ascii">
-                   <pre class="ascii-art">{algo.ascii}</pre>
-                   <p class="ascii-label">{algo.shortName}</p>
-                 </div>
                </a>
              );
            })}
@@ -245,10 +239,9 @@ try {
 
     <!-- Books Grid - Read This Year -->
     <div class="books-container" id="yearContainer" style="display: none;">
-      {booksReadThisYear.length > 0 ? (
+       {booksReadThisYear.length > 0 ? (
         <div class="books-grid">
            {booksReadThisYear.map((book: Book) => {
-             const algo = getAlgorithmIconWithArt(book.title);
              return (
                <a 
                  href={book.link}
@@ -273,10 +266,6 @@ try {
                        {book.author}
                      </p>
                    )}
-                 </div>
-                 <div class="book-ascii">
-                   <pre class="ascii-art">{algo.ascii}</pre>
-                   <p class="ascii-label">{algo.shortName}</p>
                  </div>
                </a>
              );
@@ -338,14 +327,13 @@ try {
   }
 
   .stat-tabs {
-    @apply flex flex-col divide-y-brutal divide-black;
+    @apply flex flex-col;
   }
 
   .stat-tab {
     @apply p-6 text-center border-0 bg-dark-grey cursor-pointer;
     @apply transition-all duration-200;
     @apply hover:bg-graphite;
-    @apply border-b-brutal border-black;
   }
 
   .stat-tab:last-child {

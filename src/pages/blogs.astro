@@ -1,0 +1,246 @@
+---
+import Layout from '../layouts/Layout.astro';
+import contentData from '../data/content.json';
+import { generateProbabilityGrid } from '../utils/probabilityGrids';
+
+// Combine all blogs from different sections with consistent structure (NO VIDEOS)
+const allBlogs = [
+  ...contentData.systems_writing.map(blog => ({
+    title: blog.title,
+    platform: blog.platform,
+    url: blog.url,
+    date: blog.date,
+    excerpt: blog.excerpt,
+    category: blog.category,
+    featured: blog.featured
+  })),
+  ...contentData.technical_blogs.map(blog => ({
+    title: blog.title,
+    platform: blog.platform,
+    url: blog.url,
+    date: blog.date,
+    excerpt: blog.excerpt,
+    category: blog.category,
+    featured: blog.featured
+  }))
+];
+
+// Sort by date (newest first)
+const sortedBlogs = allBlogs.sort((a, b) => 
+  new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
+// Generate grids with color rotation
+let colorHistory: string[] = [];
+const blogsWithGrids = sortedBlogs.map(blog => {
+  const grid = generateProbabilityGrid(blog.title, colorHistory);
+  colorHistory = grid.usedColors;
+  return {
+    ...blog,
+    grid
+  };
+});
+---
+
+<Layout title="All Writing - Aryan Kargwal">
+  <main class="min-h-screen py-20">
+    <div class="container-brutal">
+      <!-- Back Button -->
+      <div class="mb-8">
+        <a href="/" class="back-button">
+          ← Back to Home
+        </a>
+      </div>
+
+      <!-- Page Header -->
+      <div class="section-header mb-12">
+        <h1 class="section-title">
+          <span class="title-bracket">[</span>
+          ALL WRITING
+          <span class="title-bracket">]</span>
+        </h1>
+        <p class="font-mono text-off-white/60">
+          Essays, articles, research talks & technical deep dives
+        </p>
+      </div>
+
+      <!-- 3-Column Grid -->
+      <div class="blogs-grid">
+        {blogsWithGrids.map((blog, index) => (
+          <a 
+            href={blog.url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="blog-card"
+          >
+            <!-- Card Number -->
+            <div class="card-number">
+              #{String(index + 1).padStart(2, '0')}
+            </div>
+
+            <!-- Content -->
+            <div class="card-content">
+              <h3 class="card-title">{blog.title}</h3>
+              
+              <div class="card-meta">
+                <span class="platform-badge">{blog.platform}</span>
+                <span class="date-text">
+                  {new Date(blog.date).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short' 
+                  })}
+                </span>
+              </div>
+
+              <p class="card-excerpt">{blog.excerpt}</p>
+
+              <!-- Category Badge -->
+              {blog.category && (
+                <div class="category-badge">
+                  {blog.category}
+                </div>
+              )}
+            </div>
+
+            <!-- Probability Grid Section -->
+            <div class="grid-section">
+              <pre 
+                class="probability-grid" 
+                style={`color: ${blog.grid.color}`}
+              >{blog.grid.ascii}</pre>
+              <p class="pattern-name">{blog.grid.name}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* Back Button */
+  .back-button {
+    @apply inline-block;
+    @apply font-mono text-sm font-bold;
+    @apply text-off-white bg-dark-grey;
+    @apply px-4 py-2;
+    @apply border-brutal border-black;
+    @apply shadow-hard;
+    @apply no-underline;
+    text-decoration: none;
+  }
+
+  .container-brutal {
+    @apply max-w-7xl mx-auto px-6 md:px-12;
+  }
+
+  .section-header {
+    @apply text-center;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-5xl font-black mb-4;
+    @apply text-off-white;
+  }
+
+  .title-bracket {
+    @apply text-cyber-cyan;
+  }
+
+  /* 3-Column Grid */
+  .blogs-grid {
+    @apply grid gap-6;
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  /* Blog Card */
+  .blog-card {
+    @apply relative;
+    @apply bg-dark-grey border-brutal border-black;
+    @apply shadow-hard hover:shadow-hard-cyan;
+    @apply transition-all duration-300;
+    @apply flex flex-col;
+    @apply overflow-hidden;
+    @apply no-underline;
+    text-decoration: none;
+  }
+
+  .blog-card:hover {
+    @apply -translate-y-1;
+  }
+
+  /* Card Number */
+  .card-number {
+    @apply absolute top-3 right-3;
+    @apply font-mono text-xs font-bold;
+    @apply text-cyber-cyan;
+    @apply bg-black/50 px-2 py-1;
+    z-index: 2;
+  }
+
+  /* Card Content */
+  .card-content {
+    @apply p-6 flex-1;
+    @apply flex flex-col gap-3;
+  }
+
+  .card-title {
+    @apply text-xl font-black text-off-white;
+    @apply line-clamp-2;
+    @apply pr-12; /* Space for card number */
+  }
+
+  .card-meta {
+    @apply flex items-center gap-3 flex-wrap;
+    @apply font-mono text-xs;
+  }
+
+  .platform-badge {
+    @apply px-2 py-1;
+    @apply bg-cyber-cyan text-black font-bold;
+    @apply border border-black;
+  }
+
+  .date-text {
+    @apply text-off-white/60;
+  }
+
+  .card-excerpt {
+    @apply text-sm text-off-white/80;
+    @apply line-clamp-3;
+    @apply flex-1;
+  }
+
+  .category-badge {
+    @apply inline-block self-start;
+    @apply px-3 py-1;
+    @apply bg-acid-lime text-black;
+    @apply font-mono text-xs font-bold;
+    @apply border border-black;
+  }
+
+  /* Probability Grid Section */
+  .grid-section {
+    @apply bg-black/20;
+    @apply p-4;
+    @apply border-t-brutal border-black;
+  }
+
+  .probability-grid {
+    @apply font-mono text-[10px] leading-[1.1];
+    @apply mb-2;
+    @apply whitespace-pre;
+    @apply overflow-hidden;
+  }
+
+  .pattern-name {
+    @apply font-mono text-[8px];
+    @apply text-off-white/10;
+    @apply uppercase tracking-wider;
+    @apply transition-opacity duration-300;
+  }
+
+  .blog-card:hover .pattern-name {
+    @apply text-off-white/30;
+  }
+</style>

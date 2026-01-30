@@ -601,14 +601,22 @@ a:hover {
 ======================================*/
 
 .intro {
-  height: 100vh;
+  height: auto;
   position: relative;
   color: #fff;
+  display: flex;
+  align-items: center;
+  min-height: 600px;
 }
 
 .intro .intro-content {
-  text-align: center;
-  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  gap: 3rem;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  padding: 2rem 0;
 }
 
 .intro .overlay-itro {
@@ -620,17 +628,49 @@ a:hover {
   height: 100%;
   width: 100%;
   opacity: .9;
+  z-index: 0;
 }
 
 .intro .intro-title {
   color: #fff;
   font-weight: 600;
   font-size: 3rem;
+  margin: 0;
 }
 
 .intro .intro-subtitle {
   font-size: 1.5rem;
   font-weight: 300;
+}
+
+.intro-image {
+  flex-shrink: 0;
+  border: 3px solid #fff;
+  overflow: hidden;
+}
+
+.intro-image img {
+  display: block;
+  filter: grayscale(100%) contrast(1.2);
+  width: 100%;
+  height: auto;
+}
+
+.intro-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.intro-text .intro-title {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.intro-text .intro-subtitle {
+  text-align: left;
 }
 
 .intro .text-slider-items {
@@ -1227,6 +1267,11 @@ footer .credits a {
     font-size: 2.5rem;
   }
 
+  .intro-image {
+    max-width: 400px;
+    width: 400px;
+  }
+
   .intro-single .intro-title {
     font-size: 3.5rem;
   }
@@ -1272,5 +1317,22 @@ footer .credits a {
 @media (max-width: 768px) {
   .back-to-top {
     bottom: 15px;
+  }
+
+  .intro .intro-content > .container {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .intro-image {
+    max-width: 300px;
+  }
+
+  .intro .intro-title {
+    font-size: 2rem;
+  }
+
+  .intro .intro-subtitle {
+    font-size: 1rem;
   }
 }

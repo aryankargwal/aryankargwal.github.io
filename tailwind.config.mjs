@@ -14,6 +14,7 @@ export default {
         'cyber-cyan': '#00f3ff',
         'error-red': '#ff0055',
         'acid-lime': '#ccff00',
+        'orange-gold': '#ff9500',
       },
       fontFamily: {
         'sans': ['Space Grotesk', 'system-ui', 'sans-serif'],

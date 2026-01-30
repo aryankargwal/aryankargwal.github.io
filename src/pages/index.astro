@@ -3,15 +3,52 @@ import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import GoodreadsBooks from '../components/GoodreadsBooks.astro';
 import GitHubGraph from '../components/GitHubGraph.astro';
-import ExternalBlog from '../components/ExternalBlog.astro';
 import YouTubeVideos from '../components/YouTubeVideos.astro';
-import BlogCarousel from '../components/BlogCarousel.astro';
+import contentData from '../data/content.json';
+import { generateProbabilityGrid } from '../utils/probabilityGrids';
 import { getCollection } from 'astro:content';
 
 // Fetch all projects, sorted by date (newest first)
 const allProjects = await getCollection('projects');
 const projects = allProjects
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Get featured blogs from all sections (ONLY blogs, no videos)
+const featuredBlogs = [
+  ...contentData.systems_writing
+    .filter(blog => blog.featured)
+    .map(blog => ({
+      title: blog.title,
+      platform: blog.platform,
+      url: blog.url,
+      date: blog.date,
+      excerpt: blog.excerpt,
+      category: blog.category
+    })),
+  ...contentData.technical_blogs
+    .filter(blog => blog.featured)
+    .map(blog => ({
+      title: blog.title,
+      platform: blog.platform,
+      url: blog.url,
+      date: blog.date,
+      excerpt: blog.excerpt,
+      category: blog.category
+    }))
+]
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 6); // Show only 6 featured blogs
+
+// Generate grids with color rotation
+let colorHistory: string[] = [];
+const blogsWithGrids = featuredBlogs.map(blog => {
+  const grid = generateProbabilityGrid(blog.title, colorHistory);
+  colorHistory = grid.usedColors;
+  return {
+    ...blog,
+    grid
+  };
+});
 ---
 
 <Layout title="Aryan Kargwal - Research Portfolio">
@@ -20,71 +57,51 @@ const projects = allProjects
     <section class="hero-section">
       <div class="container-brutal">
         <div class="hero-content">
-          <!-- Profile Picture with Link to Backwater -->
-          <a href="/backwater" class="profile-picture-link">
-            <div class="profile-picture">
-              <img 
-                src="/img/aryan-profile.png" 
-                alt="Aryan Kargwal"
-                class="pfp-img"
-              />
-              <div class="pfp-overlay">
-                <span class="pfp-text">Click for more</span>
-              </div>
-            </div>
-          </a>
-          
-          <!-- Name plate -->
-          <div class="name-plate">
-            <h1 class="glitch-text" data-text="ARYAN KARGWAL">
-              ARYAN KARGWAL
-            </h1>
-          </div>
-          
-          <!-- Tagline -->
-          <div class="tagline-box">
-            <p class="font-mono text-lg md:text-xl">
-              <span class="text-cyber-cyan">[PhD Researcher]</span>
-              <span class="text-off-white/80"> AI & Robotics</span>
-              <br />
-              <span class="text-acid-lime">@</span>
-              <span class="text-off-white"> Polytechnique Montréal</span>
-            </p>
-          </div>
-          
-          <!-- Quick links -->
-          <div class="quick-links">
-            <a href="#lab-bench" class="btn-brutal">
-              Research
-            </a>
-            <a href="/backwater" class="btn-brutal">
-              Backwater
-            </a>
-            <a href="#input" class="btn-brutal">
-              Reading
-            </a>
-            <a href="mailto:aryan.kargwal@polymtl.ca" class="btn-brutal">
-              Contact
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+           <!-- Left Column: Text -->
+           <div class="hero-text-column">
+             <!-- Name plate -->
+             <div class="name-plate">
+               <h1 class="glitch-text" data-text="ARYAN KARGWAL">
+                 ARYAN KARGWAL
+               </h1>
+             </div>
+             
+             <!-- Tagline -->
+             <div class="tagline-box">
+               <p class="font-mono text-lg md:text-xl">
+                 <span class="text-cyber-cyan">[PhD Researcher]</span>
+                 <span class="text-off-white/80"> AI & Robotics</span>
+                 <br />
+                 <span class="text-acid-lime">@</span>
+                 <span class="text-off-white"> Polytechnique Montréal</span>
+               </p>
+             </div>
+             
+             <!-- Quick links -->
+             <div class="quick-links">
+               <a href="#lab-bench" class="btn-brutal">
+                 Research
+               </a>
+               <a href="#input" class="btn-brutal">
+                 Reading
+               </a>
+               <a href="mailto:aryan.kargwal@polymtl.ca" class="btn-brutal">
+                 Contact
+               </a>
+             </div>
+           </div>
 
-    <!-- Featured Blogs Carousel -->
-    <section class="section-brutal">
-      <div class="container-brutal">
-        <div class="section-header">
-          <h2 class="section-title">
-            <span class="title-bracket">[</span>
-            FEATURED WRITING
-            <span class="title-bracket">]</span>
-          </h2>
-          <p class="font-mono text-off-white/60">
-            Essays, articles & research talks
-          </p>
+           <!-- Right Column: Profile Picture -->
+           <div class="hero-image-column">
+             <div class="profile-picture">
+               <img 
+                 src="/img/aryan-profile.png" 
+                 alt="Aryan Kargwal"
+                 class="pfp-img"
+               />
+             </div>
+           </div>
         </div>
-        <BlogCarousel />
       </div>
     </section>
 
@@ -121,10 +138,74 @@ const projects = allProjects
       </div>
     </section>
 
-    <!-- Writing & Insights -->
-    <section id="writing" class="section-brutal">
+    <!-- Featured Blogs Grid -->
+    <section class="section-brutal">
       <div class="container-brutal">
-        <ExternalBlog />
+        <div class="section-header-with-link">
+          <div>
+            <h2 class="section-title">
+              <span class="title-bracket-purple">[</span>
+              FEATURED WRITING
+              <span class="title-bracket-purple">]</span>
+            </h2>
+            <p class="font-mono text-off-white/60">
+              Essays, articles & research talks
+            </p>
+          </div>
+          <a href="/blogs" class="view-all-link">
+            View All →
+          </a>
+        </div>
+
+        <!-- 3-Column Grid -->
+        <div class="blogs-grid">
+          {blogsWithGrids.map((blog, index) => (
+            <a 
+              href={blog.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="blog-card"
+            >
+              <!-- Card Number -->
+              <div class="card-number">
+                #{String(index + 1).padStart(2, '0')}
+              </div>
+
+              <!-- Content -->
+              <div class="card-content">
+                <h3 class="card-title">{blog.title}</h3>
+                
+                <div class="card-meta">
+                  <span class="platform-badge">{blog.platform}</span>
+                  <span class="date-text">
+                    {new Date(blog.date).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'short' 
+                    })}
+                  </span>
+                </div>
+
+                <p class="card-excerpt">{blog.excerpt}</p>
+
+                <!-- Category Badge -->
+                {blog.category && (
+                  <div class="category-badge">
+                    {blog.category}
+                  </div>
+                )}
+              </div>
+
+              <!-- Probability Grid Section -->
+              <div class="grid-section">
+                <pre 
+                  class="probability-grid" 
+                  style={`color: ${blog.grid.color}`}
+                >{blog.grid.ascii}</pre>
+                <p class="pattern-name">{blog.grid.name}</p>
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
 
@@ -181,7 +262,20 @@ const projects = allProjects
   }
   
   .hero-content {
-    @apply flex flex-col items-center gap-8;
+    @apply flex flex-col md:flex-row items-stretch gap-12;
+    @apply w-full;
+  }
+
+  /* Left column: text content */
+  .hero-text-column {
+    @apply flex-1 flex flex-col gap-8;
+    @apply justify-start;
+  }
+
+  /* Right column: image */
+  .hero-image-column {
+    @apply flex-1 flex items-center justify-center;
+    @apply md:pl-6;
   }
   
    /* Name plate with glitch effect */
@@ -197,40 +291,31 @@ const projects = allProjects
 
    .profile-picture {
      @apply relative;
-     @apply w-56 h-56;
+     @apply w-80 h-80;
    }
 
-   .pfp-img {
-     @apply w-56 h-56;
-     @apply border-brutal border-black;
-     @apply shadow-hard hover:shadow-hard-cyan;
-     @apply transition-all duration-300;
-     @apply object-cover;
-   }
+    .pfp-img {
+      @apply w-80 h-80;
+      @apply border-brutal border-black;
+      @apply shadow-hard;
+      @apply object-cover;
+      filter: grayscale(100%) contrast(1.2);
+    }
 
-   .profile-picture-link:hover .pfp-img {
-     @apply -translate-y-1;
-   }
+    .profile-picture-link:hover .pfp-img {
+      @apply -translate-y-1;
+    }
 
-   .pfp-overlay {
-     @apply absolute inset-0;
-     @apply bg-black/40 backdrop-blur-sm;
-     @apply flex items-center justify-center;
-     @apply opacity-0 hover:opacity-100;
-     @apply transition-all duration-300;
-     @apply cursor-pointer;
-     z-index: 3;
-   }
+    .pfp-overlay {
+      display: none;
+    }
 
-   .pfp-text {
-     @apply font-mono font-bold text-lg;
-     @apply text-cyber-cyan;
-     @apply text-center;
-     text-shadow: 1px 1px 0 #000;
-   }
+    .pfp-text {
+      display: none;
+    }
    
    .glitch-text {
-     @apply text-6xl md:text-8xl font-black;
+     @apply text-8xl font-black;
      @apply text-off-white;
      position: relative;
      text-shadow: 
@@ -238,48 +323,17 @@ const projects = allProjects
        -2px -2px 0 #ff0055;
    }
   
-  .glitch-text:hover {
-    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-  }
-  
-  @keyframes glitch {
-    0% {
-      text-shadow: 
-        2px 2px 0 #00f3ff,
-        -2px -2px 0 #ff0055;
-    }
-    25% {
-      text-shadow: 
-        -2px 2px 0 #ff0055,
-        2px -2px 0 #00f3ff;
-    }
-    50% {
-      text-shadow: 
-        2px -2px 0 #ccff00,
-        -2px 2px 0 #00f3ff;
-    }
-    75% {
-      text-shadow: 
-        -2px -2px 0 #00f3ff,
-        2px 2px 0 #ff0055;
-    }
-    100% {
-      text-shadow: 
-        2px 2px 0 #00f3ff,
-        -2px -2px 0 #ff0055;
-    }
-  }
-  
   /* Tagline box */
   .tagline-box {
     @apply border-brutal border-black bg-dark-grey;
     @apply px-8 py-6 shadow-hard;
-    @apply text-center;
+    @apply text-left;
   }
   
   /* Quick links */
   .quick-links {
-    @apply flex flex-wrap gap-4 justify-center;
+    @apply flex flex-wrap gap-4;
+    @apply md:justify-start justify-center;
   }
   
   /* Container */
@@ -298,12 +352,123 @@ const projects = allProjects
   }
   
   .section-title {
-    @apply text-4xl md:text-5xl font-black mb-4;
+    @apply text-3xl font-black mb-4;
     @apply text-off-white;
   }
   
   .title-bracket {
     @apply text-cyber-cyan;
+  }
+
+  .title-bracket-purple {
+    @apply text-purple-500;
+  }
+  
+  /* Section header with link */
+  .section-header-with-link {
+    @apply mb-12 flex justify-between items-end;
+    @apply flex-wrap gap-4;
+  }
+
+  .view-all-link {
+    @apply text-sm font-mono font-bold;
+    @apply text-off-white hover:text-acid-lime;
+    @apply transition-colors duration-300;
+    @apply no-underline;
+  }
+
+  /* Blogs Grid */
+  .blogs-grid {
+    @apply grid gap-6;
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  /* Blog Card */
+  .blog-card {
+    @apply relative;
+    @apply bg-dark-grey border-brutal border-black;
+    @apply shadow-hard hover:shadow-hard-cyan;
+    @apply transition-all duration-300;
+    @apply flex flex-col;
+    @apply overflow-hidden;
+    @apply no-underline;
+    text-decoration: none;
+  }
+
+  .blog-card:hover {
+    @apply -translate-y-1;
+  }
+
+  .card-number {
+    @apply absolute top-3 right-3;
+    @apply font-mono text-xs font-bold;
+    @apply text-cyber-cyan;
+    @apply bg-black/50 px-2 py-1;
+    z-index: 2;
+  }
+
+  .card-content {
+    @apply p-6 flex-1;
+    @apply flex flex-col gap-3;
+  }
+
+  .card-title {
+    @apply text-xl font-black text-off-white;
+    @apply line-clamp-2;
+    @apply pr-12;
+  }
+
+  .card-meta {
+    @apply flex items-center gap-3 flex-wrap;
+    @apply font-mono text-xs;
+  }
+
+  .platform-badge {
+    @apply px-2 py-1;
+    @apply bg-cyber-cyan text-black font-bold;
+    @apply border border-black;
+  }
+
+  .date-text {
+    @apply text-off-white/60;
+  }
+
+  .card-excerpt {
+    @apply text-sm text-off-white/80;
+    @apply line-clamp-3;
+    @apply flex-1;
+  }
+
+  .category-badge {
+    @apply inline-block self-start;
+    @apply px-3 py-1;
+    @apply bg-acid-lime text-black;
+    @apply font-mono text-xs font-bold;
+    @apply border border-black;
+  }
+
+  .grid-section {
+    @apply bg-black/20;
+    @apply p-4;
+    @apply border-t-brutal border-black;
+  }
+
+  .probability-grid {
+    @apply font-mono text-[10px] leading-[1.1];
+    @apply mb-2;
+    @apply whitespace-pre;
+    @apply overflow-hidden;
+  }
+
+  .pattern-name {
+    @apply font-mono text-[8px];
+    @apply text-off-white/10;
+    @apply uppercase tracking-wider;
+    @apply transition-opacity duration-300;
+  }
+
+  .blog-card:hover .pattern-name {
+    @apply text-off-white/30;
   }
   
   /* Bento Grid */
