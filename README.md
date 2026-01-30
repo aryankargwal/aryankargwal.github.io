@@ -10,9 +10,9 @@ npm run dev      # Start dev server
 npm run build    # Build for production
 ```
 
-## Writing Blog Posts
+## Writing
 
-See [BLOG_GUIDE.md](./BLOG_GUIDE.md) for instructions on how to add blog posts.
+See [writing.md](./writing.md) for instructions on how to add blog posts.
 
 ## License
 
