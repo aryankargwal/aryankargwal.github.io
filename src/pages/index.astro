@@ -5,6 +5,7 @@ import GoodreadsBooks from '../components/GoodreadsBooks.astro';
 import GitHubGraph from '../components/GitHubGraph.astro';
 import ExternalBlog from '../components/ExternalBlog.astro';
 import YouTubeVideos from '../components/YouTubeVideos.astro';
+import BlogCarousel from '../components/BlogCarousel.astro';
 import { getCollection } from 'astro:content';
 
 // Fetch all projects, sorted by date (newest first)
@@ -67,6 +68,23 @@ const projects = allProjects
             </a>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Featured Blogs Carousel -->
+    <section class="section-brutal">
+      <div class="container-brutal">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="title-bracket">[</span>
+            FEATURED WRITING
+            <span class="title-bracket">]</span>
+          </h2>
+          <p class="font-mono text-off-white/60">
+            Essays, articles & research talks
+          </p>
+        </div>
+        <BlogCarousel />
       </div>
     </section>
 
