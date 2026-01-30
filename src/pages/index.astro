@@ -19,14 +19,19 @@ const projects = allProjects
     <section class="hero-section">
       <div class="container-brutal">
         <div class="hero-content">
-          <!-- Profile Picture -->
-          <div class="profile-picture">
-            <img 
-              src="/img/aryan-profile.png" 
-              alt="Aryan Kargwal"
-              class="pfp-img"
-            />
-          </div>
+          <!-- Profile Picture with Link to Backwater -->
+          <a href="/backwater" class="profile-picture-link">
+            <div class="profile-picture">
+              <img 
+                src="/img/aryan-profile.png" 
+                alt="Aryan Kargwal"
+                class="pfp-img"
+              />
+              <div class="pfp-overlay">
+                <span class="pfp-text">Click for more</span>
+              </div>
+            </div>
+          </a>
           
           <!-- Name plate -->
           <div class="name-plate">
@@ -167,20 +172,63 @@ const projects = allProjects
    }
    
    /* Profile Picture */
+   .profile-picture-link {
+     @apply inline-block;
+     text-decoration: none;
+   }
+
    .profile-picture {
-     @apply mb-4;
+     @apply relative;
+     @apply w-56 h-56;
+     position: relative;
+     overflow: visible;
+   }
+
+   .profile-picture::before {
+     content: '';
+     position: absolute;
+     inset: -8px;
+     border: 3px solid #00f3ff;
+     box-shadow: -8px -8px 0 #262626, 8px 8px 0 #ccff00;
+     z-index: 1;
+     transition: all 0.3s ease;
+   }
+
+   .profile-picture-link:hover .profile-picture::before {
+     box-shadow: -12px -12px 0 #262626, 12px 12px 0 #ff0055;
    }
 
    .pfp-img {
-     @apply w-40 h-40 rounded-full;
-     @apply border-brutal border-black;
-     @apply shadow-hard hover:shadow-hard-cyan;
+     @apply w-56 h-56;
+     @apply border-2 border-black;
+     @apply shadow-hard;
      @apply transition-all duration-300;
      @apply object-cover;
+     position: relative;
+     z-index: 2;
    }
 
-   .pfp-img:hover {
+   .profile-picture-link:hover .pfp-img {
+     @apply shadow-hard-cyan;
      @apply -translate-y-1;
+   }
+
+   .pfp-overlay {
+     @apply absolute inset-0;
+     @apply bg-black/40 backdrop-blur-sm;
+     @apply flex items-center justify-center;
+     @apply opacity-0 hover:opacity-100;
+     @apply transition-all duration-300;
+     @apply cursor-pointer;
+     border: 2px solid black;
+     z-index: 3;
+   }
+
+   .pfp-text {
+     @apply font-mono font-bold text-lg;
+     @apply text-cyber-cyan;
+     @apply text-center;
+     text-shadow: 1px 1px 0 #000;
    }
    
    .glitch-text {

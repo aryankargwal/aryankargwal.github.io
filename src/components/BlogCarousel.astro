@@ -14,14 +14,16 @@ interface BlogItem {
   date?: string;
   excerpt?: string;
   featured?: boolean;
+  badge?: string;
+  type?: string;
 }
 
 // Combine all blog sources and filter featured ones, sorted by date
-const allBlogs: BlogItem[] = [
-  ...content.systems_writing.map(blog => ({ ...blog, type: 'systems' })),
-  ...content.technical_blogs.map(blog => ({ ...blog, type: 'technical' })),
-  ...content.research_talks.map(blog => ({ ...blog, type: 'research' }))
-].filter(blog => blog.featured).sort((a, b) => {
+const allBlogs: any[] = [
+  ...(content.systems_writing as any[]).map(blog => ({ ...blog, type: 'systems' })),
+  ...(content.technical_blogs as any[]).map(blog => ({ ...blog, type: 'technical' })),
+  ...(content.research_talks as any[]).map(blog => ({ ...blog, type: 'research' }))
+].filter(blog => blog.featured).sort((a: any, b: any) => {
   const dateA = new Date(a.date || '2000-01-01').getTime();
   const dateB = new Date(b.date || '2000-01-01').getTime();
   return dateB - dateA;
@@ -179,11 +181,30 @@ const blogsWithArt = allBlogs.map((blog, index) => ({
   .blog-card {
     @apply flex-shrink-0 border-brutal border-black bg-graphite shadow-hard;
     @apply hover:shadow-hard-cyan transition-all duration-200 cursor-pointer;
-    @apply relative overflow-hidden;
+    @apply relative overflow-visible;
     width: 280px;
     min-height: 400px;
     display: flex;
     flex-direction: column;
+  }
+
+  .blog-card::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 2px solid #00f3ff;
+    box-shadow: -6px -6px 0 #262626, 6px 6px 0 #ccff00;
+    z-index: 0;
+    transition: all 0.3s ease;
+  }
+
+  .blog-card:hover::before {
+    box-shadow: -10px -10px 0 #262626, 10px 10px 0 #ff0055;
+  }
+
+  .blog-card > * {
+    position: relative;
+    z-index: 1;
   }
 
   .blog-card:hover {

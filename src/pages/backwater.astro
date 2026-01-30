@@ -1,13 +1,17 @@
 ---
-// Backwater Page - Centralized content hub
-// Features: Featured blog carousel + organized content sections
+// Backwater Page - Expandable content sections
+// Features: Collapsible sections for blogs, projects, reading, videos & github
 
 import Layout from '../layouts/Layout.astro';
-import BlogCarousel from '../components/BlogCarousel.astro';
 import ExternalBlog from '../components/ExternalBlog.astro';
 import GoodreadsBooks from '../components/GoodreadsBooks.astro';
 import YouTubeVideos from '../components/YouTubeVideos.astro';
 import GitHubGraph from '../components/GitHubGraph.astro';
+import { getCollection } from 'astro:content';
+
+// Fetch projects
+const allProjects = await getCollection('projects');
+const projects = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <Layout title="Backwater - Aryan Kargwal">
@@ -21,7 +25,7 @@ import GitHubGraph from '../components/GitHubGraph.astro';
           </h1>
           <p class="tagline">
             <span class="text-cyber-cyan">[</span>
-            Everything I've Written, Watched & Read
+            Everything I've Written, Watched, Built & Read
             <span class="text-cyber-cyan">]</span>
           </p>
           <a href="/" class="back-link">
@@ -31,58 +35,117 @@ import GitHubGraph from '../components/GitHubGraph.astro';
       </div>
     </section>
 
-    <!-- Featured Blogs Carousel -->
-    <section class="section-brutal">
+    <!-- Expandable Sections -->
+    <section class="sections-container">
       <div class="container-brutal">
-        <div class="section-header">
-          <h2 class="section-title">
-            <span class="title-bracket">[</span>
-            FEATURED INSIGHTS
-            <span class="title-bracket">]</span>
-          </h2>
-          <p class="font-mono text-off-white/60">
-            Latest blog posts, articles & talks
-          </p>
+        
+        <!-- Writing Section -->
+        <div class="expandable-section">
+          <button class="section-toggle" data-section="writing">
+            <div class="toggle-header">
+              <h2 class="section-title">
+                <span class="title-bracket">[</span>
+                ALL WRITING
+                <span class="title-bracket">]</span>
+              </h2>
+              <span class="toggle-icon">+</span>
+            </div>
+            <p class="section-desc">Essays, articles & technical deep-dives</p>
+          </button>
+          <div class="section-content" id="writing" style="display: none;">
+            <ExternalBlog />
+          </div>
         </div>
-        <BlogCarousel />
-      </div>
-    </section>
 
-    <!-- Writing Section -->
-    <section class="section-brutal">
-      <div class="container-brutal">
-        <div class="section-header">
-          <h2 class="section-title">
-            <span class="title-bracket">[</span>
-            ALL WRITING
-            <span class="title-bracket">]</span>
-          </h2>
-          <p class="font-mono text-off-white/60">
-            Complete collection of essays, articles & technical deep-dives
-          </p>
+        <!-- Projects Section -->
+        <div class="expandable-section">
+          <button class="section-toggle" data-section="projects">
+            <div class="toggle-header">
+              <h2 class="section-title">
+                <span class="title-bracket">[</span>
+                MY PROJECTS
+                <span class="title-bracket">]</span>
+              </h2>
+              <span class="toggle-icon">+</span>
+            </div>
+            <p class="section-desc">Systems, prototypes & research work</p>
+          </button>
+          <div class="section-content" id="projects" style="display: none;">
+            <div class="projects-grid">
+              {projects.map((project) => (
+                <a href={`/projects/${project.slug}`} class="project-card-link">
+                  <div class="project-card">
+                    <div class="project-header">
+                      <h3 class="project-title">{project.data.title}</h3>
+                      <span class="project-status">{project.data.status}</span>
+                    </div>
+                    <p class="project-description">{project.data.description}</p>
+                    <div class="project-tags">
+                      {project.data.tags.map(tag => (
+                        <span class="tag">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
-        <ExternalBlog />
-      </div>
-    </section>
 
-    <!-- Reading Section -->
-    <section class="section-brutal">
-      <div class="container-brutal">
-        <GoodreadsBooks />
-      </div>
-    </section>
+        <!-- Reading Section -->
+        <div class="expandable-section">
+          <button class="section-toggle" data-section="reading">
+            <div class="toggle-header">
+              <h2 class="section-title">
+                <span class="title-bracket">[</span>
+                CURRENTLY READING
+                <span class="title-bracket">]</span>
+              </h2>
+              <span class="toggle-icon">+</span>
+            </div>
+            <p class="section-desc">Books & reading progress</p>
+          </button>
+          <div class="section-content" id="reading" style="display: none;">
+            <GoodreadsBooks />
+          </div>
+        </div>
 
-    <!-- Video Section -->
-    <section class="section-brutal">
-      <div class="container-brutal">
-        <YouTubeVideos />
-      </div>
-    </section>
+        <!-- Videos Section -->
+        <div class="expandable-section">
+          <button class="section-toggle" data-section="videos">
+            <div class="toggle-header">
+              <h2 class="section-title">
+                <span class="title-bracket">[</span>
+                VIDEO CONTENT
+                <span class="title-bracket">]</span>
+              </h2>
+              <span class="toggle-icon">+</span>
+            </div>
+            <p class="section-desc">Talks, demos & recordings</p>
+          </button>
+          <div class="section-content" id="videos" style="display: none;">
+            <YouTubeVideos />
+          </div>
+        </div>
 
-    <!-- GitHub Activity Section -->
-    <section class="section-brutal">
-      <div class="container-brutal">
-        <GitHubGraph />
+        <!-- GitHub Section -->
+        <div class="expandable-section">
+          <button class="section-toggle" data-section="github">
+            <div class="toggle-header">
+              <h2 class="section-title">
+                <span class="title-bracket">[</span>
+                GITHUB ACTIVITY
+                <span class="title-bracket">]</span>
+              </h2>
+              <span class="toggle-icon">+</span>
+            </div>
+            <p class="section-desc">Last 52 weeks of contributions</p>
+          </button>
+          <div class="section-content" id="github" style="display: none;">
+            <GitHubGraph />
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -109,6 +172,28 @@ import GitHubGraph from '../components/GitHubGraph.astro';
     </footer>
   </main>
 </Layout>
+
+<script is:inline>
+  // Handle section toggle
+  const toggles = document.querySelectorAll('.section-toggle');
+  
+  toggles.forEach(toggle => {
+    toggle.addEventListener('click', function() {
+      const sectionId = this.getAttribute('data-section');
+      const content = document.getElementById(sectionId);
+      const icon = this.querySelector('.toggle-icon');
+      const isOpen = content.style.display !== 'none';
+      
+      content.style.display = isOpen ? 'none' : 'block';
+      icon.textContent = isOpen ? '+' : '−';
+      
+      // Smooth animation
+      if (!isOpen) {
+        content.style.animation = 'slideDown 0.3s ease-out';
+      }
+    });
+  });
+</script>
 
 <style>
   /* Header Section */
@@ -138,35 +223,128 @@ import GitHubGraph from '../components/GitHubGraph.astro';
     @apply bg-graphite text-cyber-cyan font-mono;
     @apply hover:bg-dark-grey hover:text-acid-lime;
     @apply transition-all duration-200;
-    display: inline-block;
   }
 
   .back-link:active {
     @apply translate-y-1;
   }
 
-  /* Container */
-  .container-brutal {
-    @apply max-w-7xl mx-auto px-6 md:px-12;
+  /* Expandable Sections */
+  .sections-container {
+    @apply py-12;
   }
 
-  /* Section */
-  .section-brutal {
-    @apply py-20;
+  .expandable-section {
+    @apply mb-6 border-brutal border-black bg-dark-grey shadow-hard;
+    @apply transition-all duration-200;
   }
 
-  /* Section header */
-  .section-header {
-    @apply mb-12 text-center;
+  .expandable-section:hover {
+    @apply shadow-hard-cyan;
+  }
+
+  .section-toggle {
+    @apply w-full;
+    @apply p-8 text-left border-0 bg-dark-grey cursor-pointer;
+    @apply transition-all duration-200;
+    @apply hover:bg-graphite;
+    border: none;
+  }
+
+  .toggle-header {
+    @apply flex justify-between items-center gap-4;
   }
 
   .section-title {
-    @apply text-4xl md:text-5xl font-black mb-4;
+    @apply text-3xl md:text-4xl font-black;
     @apply text-off-white;
+    margin: 0;
+    letter-spacing: -1px;
   }
 
   .title-bracket {
     @apply text-cyber-cyan;
+  }
+
+  .toggle-icon {
+    @apply text-3xl font-bold text-cyber-cyan;
+    @apply transition-all duration-300;
+    @apply flex-shrink-0;
+  }
+
+  .section-desc {
+    @apply text-sm font-mono text-off-white/60;
+    @apply mt-2 mb-0;
+  }
+
+  .section-content {
+    @apply p-8 border-t-brutal border-black bg-graphite;
+    @apply transition-all duration-300;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Projects Grid */
+  .projects-grid {
+    @apply grid gap-6;
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .project-card-link {
+    text-decoration: none;
+  }
+
+  .project-card {
+    @apply p-6 border-brutal border-black bg-dark-grey shadow-hard;
+    @apply hover:shadow-hard-cyan transition-all duration-200;
+    @apply cursor-pointer;
+  }
+
+  .project-card:hover {
+    @apply -translate-y-1;
+  }
+
+  .project-header {
+    @apply flex justify-between items-start gap-4 mb-3;
+  }
+
+  .project-title {
+    @apply text-xl font-bold text-off-white;
+    margin: 0;
+  }
+
+  .project-status {
+    @apply text-xs font-mono font-bold text-acid-lime;
+    @apply uppercase tracking-wider px-2 py-1;
+    @apply border-brutal border-black bg-graphite;
+  }
+
+  .project-description {
+    @apply text-sm font-mono text-off-white/70 mb-3;
+  }
+
+  .project-tags {
+    @apply flex gap-2 flex-wrap;
+  }
+
+  .tag {
+    @apply inline-block px-2 py-1;
+    @apply text-xs font-mono font-semibold;
+    @apply border-brutal border-black bg-dark-grey text-cyber-cyan;
+  }
+
+  /* Container */
+  .container-brutal {
+    @apply max-w-7xl mx-auto px-6 md:px-12;
   }
 
   /* Footer */
@@ -185,12 +363,16 @@ import GitHubGraph from '../components/GitHubGraph.astro';
       @apply text-4xl md:text-5xl;
     }
 
-    .tagline {
-      @apply text-base md:text-lg;
-    }
-
     .section-title {
       @apply text-2xl md:text-3xl;
+    }
+
+    .section-toggle {
+      @apply p-6;
+    }
+
+    .section-content {
+      @apply p-4;
     }
   }
 </style>

@@ -211,6 +211,7 @@ try {
                   alt={book.title}
                   class="book-cover"
                   loading="lazy"
+                  style="filter: none; saturate: 100%;"
                 />
               )}
               <div class="book-info">
@@ -327,7 +328,7 @@ try {
   .stat-tab {
     @apply p-6 text-center border-0 bg-dark-grey cursor-pointer;
     @apply transition-all duration-200;
-    @apply hover:bg-graphite hover:shadow-hard-cyan;
+    @apply hover:bg-graphite;
     @apply border-b-brutal border-black;
   }
 
@@ -336,7 +337,7 @@ try {
   }
 
   .stat-tab.active {
-    @apply bg-graphite shadow-hard-cyan;
+    @apply bg-graphite;
   }
 
   .stat-tab:active {
@@ -345,20 +346,10 @@ try {
 
   .stat-number {
     @apply text-4xl font-black text-cyber-cyan mb-1 font-mono;
-    @apply transition-colors duration-200;
-  }
-
-  .stat-tab:hover .stat-number {
-    @apply text-acid-lime;
   }
 
   .stat-label {
     @apply text-xs font-mono text-off-white/60 uppercase tracking-wide;
-    @apply transition-colors duration-200;
-  }
-
-  .stat-tab:hover .stat-label {
-    @apply text-off-white;
   }
 
   .books-container {
@@ -375,6 +366,22 @@ try {
     @apply shadow-hard hover:shadow-hard-cyan;
     @apply transition-all duration-200;
     @apply cursor-pointer;
+    @apply relative overflow-visible;
+    filter: none !important;
+  }
+
+  .book-card::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 2px solid #00f3ff;
+    box-shadow: -6px -6px 0 #262626, 6px 6px 0 #ccff00;
+    z-index: -1;
+    transition: all 0.3s ease;
+  }
+
+  .book-card:hover::before {
+    box-shadow: -10px -10px 0 #262626, 10px 10px 0 #ff0055;
   }
 
   .book-card:hover {
@@ -390,6 +397,7 @@ try {
     @apply border-b-brutal border-black;
     aspect-ratio: 2/3;
     object-fit: cover;
+    filter: none;
   }
 
   .book-info {
