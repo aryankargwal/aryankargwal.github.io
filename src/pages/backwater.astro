@@ -7,7 +7,7 @@ import ExternalBlog from '../components/ExternalBlog.astro';
 import GoodreadsBooks from '../components/GoodreadsBooks.astro';
 import YouTubeVideos from '../components/YouTubeVideos.astro';
 import GitHubGraph from '../components/GitHubGraph.astro';
-import { getAlgorithmIcon } from '../utils/algorithmIcons';
+import { getAlgorithmIconWithArt } from '../utils/algorithmIcons';
 import { getCollection } from 'astro:content';
 
 // Fetch projects
@@ -71,14 +71,13 @@ const projects = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.
             </div>
             <p class="section-desc">Systems, prototypes & research work</p>
           </button>
-           <div class="section-content" id="projects" style="display: none;">
+            <div class="section-content" id="projects" style="display: none;">
             <div class="projects-grid">
               {projects.map((project) => {
-                const icon = getAlgorithmIcon(project.data.title);
+                const algo = getAlgorithmIconWithArt(project.data.title);
                 return (
-                  <a href={`/projects/${project.slug}`} class="project-card-link" title={icon.name}>
+                  <a href={`/projects/${project.slug}`} class="project-card-link">
                     <div class="project-card">
-                      <div class="project-algo-icon">{icon.icon}</div>
                       <div class="project-header">
                         <h3 class="project-title">{project.data.title}</h3>
                         <span class="project-status">{project.data.status}</span>
@@ -88,6 +87,10 @@ const projects = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.
                         {project.data.tags.map(tag => (
                           <span class="tag">{tag}</span>
                         ))}
+                      </div>
+                      <div class="project-ascii">
+                        <pre class="ascii-art">{algo.ascii}</pre>
+                        <p class="ascii-label">{algo.shortName}</p>
                       </div>
                     </div>
                   </a>
@@ -308,49 +311,62 @@ const projects = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.
     text-decoration: none;
   }
 
-  .project-card {
-    @apply p-6 border-brutal border-black bg-dark-grey shadow-hard;
-    @apply hover:shadow-hard-cyan transition-all duration-200;
-    @apply cursor-pointer relative;
-  }
+   .project-card {
+     @apply border-brutal border-black bg-dark-grey shadow-hard;
+     @apply hover:shadow-hard-cyan transition-all duration-200;
+     @apply cursor-pointer relative flex flex-col;
+   }
 
-  .project-card:hover {
-    @apply -translate-y-1;
-  }
+   .project-card:hover {
+     @apply -translate-y-1;
+   }
 
-  .project-algo-icon {
-    @apply absolute top-3 right-3 text-2xl font-bold text-cyber-cyan font-mono;
-    @apply opacity-60;
-  }
+   .project-header {
+     @apply flex justify-between items-start gap-4 mb-3;
+   }
 
-  .project-header {
-    @apply flex justify-between items-start gap-4 mb-3;
-  }
+   .project-title {
+     @apply text-xl font-bold text-off-white;
+     margin: 0;
+   }
 
-  .project-title {
-    @apply text-xl font-bold text-off-white;
-    margin: 0;
-  }
+   .project-status {
+     @apply text-xs font-mono font-bold text-acid-lime;
+     @apply uppercase tracking-wider px-2 py-1;
+     @apply border-brutal border-black bg-graphite;
+   }
 
-  .project-status {
-    @apply text-xs font-mono font-bold text-acid-lime;
-    @apply uppercase tracking-wider px-2 py-1;
-    @apply border-brutal border-black bg-graphite;
-  }
+   .project-description {
+     @apply text-sm font-mono text-off-white/70 mb-3;
+   }
 
-  .project-description {
-    @apply text-sm font-mono text-off-white/70 mb-3;
-  }
+   .project-tags {
+     @apply flex gap-2 flex-wrap mb-auto;
+   }
 
-  .project-tags {
-    @apply flex gap-2 flex-wrap;
-  }
+   .tag {
+     @apply inline-block px-2 py-1;
+     @apply text-xs font-mono font-semibold;
+     @apply border-brutal border-black bg-dark-grey text-cyber-cyan;
+   }
 
-  .tag {
-    @apply inline-block px-2 py-1;
-    @apply text-xs font-mono font-semibold;
-    @apply border-brutal border-black bg-dark-grey text-cyber-cyan;
-  }
+   .project-ascii {
+     @apply border-t-brutal border-black p-3 bg-graphite mt-4;
+     @apply text-center;
+   }
+
+   .project-ascii .ascii-art {
+     @apply font-mono text-xs leading-tight;
+     @apply m-0 p-0;
+     word-break: break-all;
+     white-space: pre-wrap;
+     color: #00f3ff;
+   }
+
+   .project-ascii .ascii-label {
+     @apply text-xs font-mono text-off-white/60 mt-2 mb-0;
+     @apply uppercase tracking-wider font-bold;
+   }
 
   /* Container */
   .container-brutal {
