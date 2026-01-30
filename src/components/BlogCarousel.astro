@@ -1,10 +1,9 @@
 ---
 // Blog Carousel Component
 // Displays featured blogs in a horizontal carousel with manual navigation
-// Features ASCII art patterns with mathematical functions
+// Features 32-bit probability grid visualizations
 
-import { generateDeterministicAsciiArt } from '../utils/mathAsciiGenerator';
-import { getAlgorithmIconWithArt } from '../utils/algorithmIcons';
+import { generateProbabilityGrid } from '../utils/probabilityGrids';
 import content from '../data/content.json';
 
 interface BlogItem {
@@ -30,10 +29,10 @@ const allBlogs: any[] = [
   return dateB - dateA;
 });
 
-// Generate ASCII art for each blog (deterministic based on title)
-const blogsWithArt = allBlogs.map((blog, index) => ({
+// Generate probability grids for each blog (deterministic based on title)
+const blogsWithGrids = allBlogs.map((blog, index) => ({
   ...blog,
-  ascii: generateDeterministicAsciiArt(blog.title),
+  grid: generateProbabilityGrid(blog.title),
   cardNumber: String(index + 1).padStart(2, '0')
 }));
 ---
@@ -41,37 +40,34 @@ const blogsWithArt = allBlogs.map((blog, index) => ({
 <div class="blog-carousel-wrapper">
   <div class="carousel-container">
     <div class="carousel-track" id="carouselTrack">
-      {blogsWithArt.map((blog) => {
-        const algo = getAlgorithmIconWithArt(blog.title);
-        return (
-          <a href={blog.url} target="_blank" rel="noopener" class="blog-card">
-            <div class="card-number">{blog.cardNumber}</div>
-            
-            <div class="card-content">
-              <div class="card-header">
-                <h3 class="blog-title">{blog.title}</h3>
-                <p class="blog-meta">
-                  <span class="platform">{blog.platform}</span>
-                  {blog.date && <span class="date">{new Date(blog.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>}
-                </p>
-              </div>
-              
-              {blog.excerpt && (
-                <p class="blog-excerpt">{blog.excerpt}</p>
-              )}
-              
-              <div class="card-category">
-                <span class="category-badge">{blog.category || 'Featured'}</span>
-              </div>
+      {blogsWithGrids.map((blog) => (
+        <a href={blog.url} target="_blank" rel="noopener" class="blog-card">
+          <div class="card-number">{blog.cardNumber}</div>
+          
+          <div class="card-content">
+            <div class="card-header">
+              <h3 class="blog-title">{blog.title}</h3>
+              <p class="blog-meta">
+                <span class="platform">{blog.platform}</span>
+                {blog.date && <span class="date">{new Date(blog.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>}
+              </p>
             </div>
             
-            <div class="card-ascii">
-              <pre class="ascii-art">{algo.ascii}</pre>
-              <p class="ascii-label">{algo.shortName}</p>
+            {blog.excerpt && (
+              <p class="blog-excerpt">{blog.excerpt}</p>
+            )}
+            
+            <div class="card-category">
+              <span class="category-badge">{blog.category || 'Featured'}</span>
             </div>
-          </a>
-        );
-      })}
+          </div>
+          
+          <div class="card-grid">
+            <pre class="grid-art">{blog.grid.ascii}</pre>
+            <p class="grid-label">{blog.grid.name}</p>
+          </div>
+        </a>
+      ))}
     </div>
   </div>
 
@@ -240,20 +236,20 @@ const blogsWithArt = allBlogs.map((blog, index) => ({
     @apply text-xs font-mono font-semibold text-acid-lime;
   }
 
-  .card-ascii {
-    @apply border-t-brutal border-black p-3 bg-dark-grey;
-    @apply text-center;
-  }
-
-   .ascii-art {
-     @apply font-mono text-xs leading-tight;
-     @apply m-0 p-0;
-     word-break: break-all;
-     white-space: pre-wrap;
-     color: #00f3ff;
+   .card-grid {
+     @apply border-t-brutal border-black p-3 bg-dark-grey;
+     @apply text-center;
    }
 
-   .ascii-label {
+   .grid-art {
+     @apply font-mono text-[10px] leading-[1.1];
+     @apply m-0 p-0;
+     white-space: pre;
+     color: #00f3ff;
+     letter-spacing: 0.05em;
+   }
+
+   .grid-label {
      @apply text-xs font-mono text-off-white/60 mt-2 mb-0;
      @apply uppercase tracking-wider font-bold;
    }
