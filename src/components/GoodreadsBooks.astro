@@ -1,6 +1,6 @@
 ---
 // This component fetches currently reading books from Goodreads RSS feed
-import { getAlgorithmIcon } from '../utils/algorithmIcons';
+import { getAlgorithmIconWithArt } from '../utils/algorithmIcons';
 
 interface Book {
   title: string;
@@ -200,41 +200,41 @@ try {
     <div class="books-container" id="readingContainer">
       {currentlyReadingBooks.length > 0 ? (
         <div class="books-grid">
-          {currentlyReadingBooks.map((book: Book) => {
-            const icon = getAlgorithmIcon(book.title);
-            return (
-              <a 
-                href={book.link}
-                target="_blank"
-                rel="noopener"
-                class="book-card"
-                title={icon.name}
-              >
-                {book.coverUrl && (
-                  <img 
-                    src={book.coverUrl} 
-                    alt={book.title}
-                    class="book-cover"
-                    loading="lazy"
-                    style="filter: none; saturate: 100%;"
-                  />
-                )}
-                <div class="book-algo-icon">
-                  {icon.icon}
-                </div>
-                <div class="book-info">
-                  <p class="book-title font-mono text-xs font-semibold line-clamp-2 mb-1">
-                    {book.title}
-                  </p>
-                  {book.author && (
-                    <p class="book-author font-mono text-xs text-off-white/60">
-                      {book.author}
-                    </p>
-                  )}
-                </div>
-              </a>
-            );
-          })}
+           {currentlyReadingBooks.map((book: Book) => {
+             const algo = getAlgorithmIconWithArt(book.title);
+             return (
+               <a 
+                 href={book.link}
+                 target="_blank"
+                 rel="noopener"
+                 class="book-card"
+               >
+                 {book.coverUrl && (
+                   <img 
+                     src={book.coverUrl} 
+                     alt={book.title}
+                     class="book-cover"
+                     loading="lazy"
+                     style="filter: none; saturate: 100%;"
+                   />
+                 )}
+                 <div class="book-info">
+                   <p class="book-title font-mono text-xs font-semibold line-clamp-2 mb-1">
+                     {book.title}
+                   </p>
+                   {book.author && (
+                     <p class="book-author font-mono text-xs text-off-white/60">
+                       {book.author}
+                     </p>
+                   )}
+                 </div>
+                 <div class="book-ascii">
+                   <pre class="ascii-art">{algo.ascii}</pre>
+                   <p class="ascii-label">{algo.shortName}</p>
+                 </div>
+               </a>
+             );
+           })}
         </div>
       ) : (
         <p class="font-mono text-sm text-off-white/60">
@@ -247,40 +247,40 @@ try {
     <div class="books-container" id="yearContainer" style="display: none;">
       {booksReadThisYear.length > 0 ? (
         <div class="books-grid">
-          {booksReadThisYear.map((book: Book) => {
-            const icon = getAlgorithmIcon(book.title);
-            return (
-              <a 
-                href={book.link}
-                target="_blank"
-                rel="noopener"
-                class="book-card"
-                title={icon.name}
-              >
-                {book.coverUrl && (
-                  <img 
-                    src={book.coverUrl} 
-                    alt={book.title}
-                    class="book-cover"
-                    loading="lazy"
-                  />
-                )}
-                <div class="book-algo-icon">
-                  {icon.icon}
-                </div>
-                <div class="book-info">
-                  <p class="book-title font-mono text-xs font-semibold line-clamp-2 mb-1">
-                    {book.title}
-                  </p>
-                  {book.author && (
-                    <p class="book-author font-mono text-xs text-off-white/60">
-                      {book.author}
-                    </p>
-                  )}
-                </div>
-              </a>
-            );
-          })}
+           {booksReadThisYear.map((book: Book) => {
+             const algo = getAlgorithmIconWithArt(book.title);
+             return (
+               <a 
+                 href={book.link}
+                 target="_blank"
+                 rel="noopener"
+                 class="book-card"
+               >
+                 {book.coverUrl && (
+                   <img 
+                     src={book.coverUrl} 
+                     alt={book.title}
+                     class="book-cover"
+                     loading="lazy"
+                   />
+                 )}
+                 <div class="book-info">
+                   <p class="book-title font-mono text-xs font-semibold line-clamp-2 mb-1">
+                     {book.title}
+                   </p>
+                   {book.author && (
+                     <p class="book-author font-mono text-xs text-off-white/60">
+                       {book.author}
+                     </p>
+                   )}
+                 </div>
+                 <div class="book-ascii">
+                   <pre class="ascii-art">{algo.ascii}</pre>
+                   <p class="ascii-label">{algo.shortName}</p>
+                 </div>
+               </a>
+             );
+           })}
         </div>
       ) : (
         <p class="font-mono text-sm text-off-white/60">
@@ -394,10 +394,28 @@ try {
     @apply shadow-hard-collapsed translate-x-1 translate-y-1;
   }
 
-  .book-algo-icon {
-    @apply absolute top-2 right-2 text-lg font-bold text-cyber-cyan opacity-70;
-    @apply font-mono z-10;
-  }
+   .book-algo-icon {
+     @apply absolute top-2 right-2 text-lg font-bold text-cyber-cyan opacity-70;
+     @apply font-mono z-10;
+   }
+
+   .book-ascii {
+     @apply border-t-brutal border-black p-2 bg-dark-grey;
+     @apply text-center;
+   }
+
+   .ascii-art {
+     @apply font-mono text-xs leading-tight;
+     @apply m-0 p-0;
+     word-break: break-all;
+     white-space: pre-wrap;
+     color: #00f3ff;
+   }
+
+   .ascii-label {
+     @apply text-xs font-mono text-off-white/60 mt-1 mb-0;
+     @apply uppercase tracking-wider font-bold;
+   }
 
   .book-cover {
     @apply w-full h-auto;

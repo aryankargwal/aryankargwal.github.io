@@ -4,7 +4,7 @@
 // Features ASCII art patterns with mathematical functions
 
 import { generateDeterministicAsciiArt } from '../utils/mathAsciiGenerator';
-import { getAlgorithmIcon } from '../utils/algorithmIcons';
+import { getAlgorithmIconWithArt } from '../utils/algorithmIcons';
 import content from '../data/content.json';
 
 interface BlogItem {
@@ -42,11 +42,10 @@ const blogsWithArt = allBlogs.map((blog, index) => ({
   <div class="carousel-container">
     <div class="carousel-track" id="carouselTrack">
       {blogsWithArt.map((blog) => {
-        const icon = getAlgorithmIcon(blog.title);
+        const algo = getAlgorithmIconWithArt(blog.title);
         return (
-          <a href={blog.url} target="_blank" rel="noopener" class="blog-card" title={icon.name}>
+          <a href={blog.url} target="_blank" rel="noopener" class="blog-card">
             <div class="card-number">{blog.cardNumber}</div>
-            <div class="blog-algo-icon">{icon.icon}</div>
             
             <div class="card-content">
               <div class="card-header">
@@ -67,8 +66,8 @@ const blogsWithArt = allBlogs.map((blog, index) => ({
             </div>
             
             <div class="card-ascii">
-              <pre class="ascii-art" style={`color: ${blog.ascii.color};`}>{blog.ascii.pattern}</pre>
-              <p class="ascii-function">{blog.ascii.functionName}</p>
+              <pre class="ascii-art">{algo.ascii}</pre>
+              <p class="ascii-label">{algo.shortName}</p>
             </div>
           </a>
         );
@@ -197,18 +196,13 @@ const blogsWithArt = allBlogs.map((blog, index) => ({
   }
 
    .card-number {
-    @apply absolute top-3 left-3 text-2xl font-black text-cyber-cyan font-mono;
-    @apply opacity-50;
-  }
+     @apply absolute top-3 left-3 text-2xl font-black text-cyber-cyan font-mono;
+     @apply opacity-50;
+   }
 
-  .blog-algo-icon {
-    @apply absolute top-3 right-3 text-2xl font-black text-cyber-cyan font-mono;
-    @apply opacity-60 z-10;
-  }
-
-  .card-content {
-    @apply flex-1 p-5 pt-12 flex flex-col gap-3;
-  }
+   .card-content {
+     @apply flex-1 p-5 pt-12 flex flex-col gap-3;
+   }
 
   .card-header {
     @apply flex-1;
@@ -251,17 +245,18 @@ const blogsWithArt = allBlogs.map((blog, index) => ({
     @apply text-center;
   }
 
-  .ascii-art {
-    @apply font-mono text-xs leading-tight;
-    @apply m-0 p-0;
-    word-break: break-all;
-    white-space: pre-wrap;
-  }
+   .ascii-art {
+     @apply font-mono text-xs leading-tight;
+     @apply m-0 p-0;
+     word-break: break-all;
+     white-space: pre-wrap;
+     color: #00f3ff;
+   }
 
-  .ascii-function {
-    @apply text-xs font-mono text-off-white/60 mt-2 mb-0;
-    @apply uppercase tracking-wider;
-  }
+   .ascii-label {
+     @apply text-xs font-mono text-off-white/60 mt-2 mb-0;
+     @apply uppercase tracking-wider font-bold;
+   }
 
   /* Carousel Controls */
   .carousel-controls {

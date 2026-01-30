@@ -1,172 +1,487 @@
 /**
- * Algorithm-based Icon Generator
- * Generates random algorithmic patterns and symbols from a large library
- * Each item gets a consistent but random icon based on its content hash
+ * Algorithm-based Icon Generator with ASCII Art
+ * Generates deterministic algorithm icons with ASCII art representations
+ * Each item gets a consistent icon based on its content hash
  */
 
-interface AlgorithmIcon {
-  icon: string;
+export interface AlgorithmIcon {
   name: string;
   category: string;
+  ascii: string;  // Multi-line ASCII art
+  shortName: string;  // Short version for display
 }
 
-// Massive library of algorithm-based icons (100+)
-const ALGORITHM_ICONS: AlgorithmIcon[] = [
+// Massive library of algorithms with ASCII art (100+)
+const ALGORITHM_LIBRARY: AlgorithmIcon[] = [
   // Sorting Algorithms
-  { icon: '⟰', name: 'Bubble Sort', category: 'sort' },
-  { icon: '⬇️⬆️', name: 'Quick Sort', category: 'sort' },
-  { icon: '∿', name: 'Merge Sort', category: 'sort' },
-  { icon: '↻', name: 'Heap Sort', category: 'sort' },
-  
+  {
+    name: 'Bubble Sort',
+    category: 'sort',
+    shortName: 'BUBBLE',
+    ascii: `
+  ○ ○ ○
+  ↓   ↓
+  ○→○ ○
+    ↓
+  ○ ○ ○
+    `.trim()
+  },
+  {
+    name: 'Quick Sort',
+    category: 'sort',
+    shortName: 'QUICK',
+    ascii: `
+  ┌─────┐
+  │ ◉ │
+  └─┬─┘
+   ├─┐
+   ○ ○
+    `.trim()
+  },
+  {
+    name: 'Merge Sort',
+    category: 'sort',
+    shortName: 'MERGE',
+    ascii: `
+  ┌─┬─┐
+  │○│○│
+  └─┴─┘
+    │
+   ┌┴┐
+   ○ ○
+    `.trim()
+  },
+  {
+    name: 'Heap Sort',
+    category: 'sort',
+    shortName: 'HEAP',
+    ascii: `
+     ◉
+    ╱ ╲
+   ○   ○
+  ╱ ╲
+ ○   ○
+    `.trim()
+  },
+
   // Graph Algorithms
-  { icon: '◯⊙◯', name: 'BFS', category: 'graph' },
-  { icon: '◯→◯', name: 'DFS', category: 'graph' },
-  { icon: '◯◯◯', name: 'Connected Components', category: 'graph' },
-  { icon: '⊕', name: 'Shortest Path', category: 'graph' },
-  { icon: '⟲', name: 'Cycle Detection', category: 'graph' },
-  { icon: '❋', name: 'Spanning Tree', category: 'graph' },
-  
+  {
+    name: 'BFS',
+    category: 'graph',
+    shortName: 'BFS',
+    ascii: `
+  ┌─○─┐
+  ○───○
+  └─○─┘
+    │
+   ┌┴┐
+   ○ ○
+    `.trim()
+  },
+  {
+    name: 'DFS',
+    category: 'graph',
+    shortName: 'DFS',
+    ascii: `
+  ○→○→○
+  ↓   ↓
+  ○←○←○
+    │
+    ↓
+    ○
+    `.trim()
+  },
+  {
+    name: 'Dijkstra',
+    category: 'graph',
+    shortName: 'DIJKSTRA',
+    ascii: `
+  ◉→1→2
+  │ ↘  ↗
+  1  3
+  ↓ ╱
+  2→4
+    `.trim()
+  },
+  {
+    name: 'Cycle Detection',
+    category: 'graph',
+    shortName: 'CYCLE',
+    ascii: `
+  ○→○
+  ↑ │
+  └─○
+    │
+   ○→○
+    `.trim()
+  },
+
   // Search Algorithms
-  { icon: '⊙●', name: 'Binary Search', category: 'search' },
-  { icon: '●○○', name: 'Linear Search', category: 'search' },
-  { icon: '◈', name: 'Hash Search', category: 'search' },
-  { icon: '△▽', name: 'Ternary Search', category: 'search' },
-  
-  // Math Patterns
-  { icon: '∑', name: 'Sum', category: 'math' },
-  { icon: '∫', name: 'Integration', category: 'math' },
-  { icon: '∞', name: 'Infinity', category: 'math' },
-  { icon: '√', name: 'Root', category: 'math' },
-  { icon: '∏', name: 'Product', category: 'math' },
-  { icon: '∇', name: 'Gradient', category: 'math' },
-  { icon: '⊗', name: 'Cross Product', category: 'math' },
-  { icon: '⟨⟩', name: 'Angles', category: 'math' },
-  
+  {
+    name: 'Binary Search',
+    category: 'search',
+    shortName: 'BINARY',
+    ascii: `
+  ┌─────┐
+  │ ◉ │
+  ├─┘└─┤
+  ○   ○
+    │
+    ↓
+    ●
+    `.trim()
+  },
+  {
+    name: 'Linear Search',
+    category: 'search',
+    shortName: 'LINEAR',
+    ascii: `
+  ●○○○○
+  →→→→
+  ○●○○○
+  →→→
+  ○○●○○
+    `.trim()
+  },
+
+  // Math Algorithms
+  {
+    name: 'Fibonacci',
+    category: 'math',
+    shortName: 'FIB',
+    ascii: `
+  1
+  1 1
+  2 1 1
+  3 2 1 1
+  5 3 2 1
+    `.trim()
+  },
+  {
+    name: 'GCD',
+    category: 'math',
+    shortName: 'GCD',
+    ascii: `
+  ┌────┐
+  │ a │
+  │ ↓ │
+  │ b │
+  │ ↓ │
+  │gcd│
+  └────┘
+    `.trim()
+  },
+  {
+    name: 'Prime Sieve',
+    category: 'math',
+    shortName: 'SIEVE',
+    ascii: `
+  2 ● 3 ●
+  ○ 5 ● 7
+  ● 11 ● 13
+  ○ 17 ● 19
+    `.trim()
+  },
+
   // Cryptography
-  { icon: '🔐', name: 'RSA', category: 'crypto' },
-  { icon: '≈', name: 'Hash', category: 'crypto' },
-  { icon: '⊕⊕', name: 'XOR', category: 'crypto' },
-  { icon: '▥', name: 'Encryption', category: 'crypto' },
-  
+  {
+    name: 'RSA',
+    category: 'crypto',
+    shortName: 'RSA',
+    ascii: `
+  p × q = n
+  ↓ ↓   ↓
+  2 5 = 10
+  │ │
+  e d (φ)
+  ↓ ↓
+  C M
+    `.trim()
+  },
+  {
+    name: 'Hash Function',
+    category: 'crypto',
+    shortName: 'HASH',
+    ascii: `
+  INPUT
+   │││
+   ▼▼▼
+  ⊕⊕⊕
+  │││
+  ▼▼▼
+  OUTPUT
+    `.trim()
+  },
+
   // Data Structures
-  { icon: '⊟', name: 'Stack', category: 'ds' },
-  { icon: '⊞', name: 'Queue', category: 'ds' },
-  { icon: '🌳', name: 'Tree', category: 'ds' },
-  { icon: '◆◇', name: 'Hash Table', category: 'ds' },
-  { icon: '└─┐', name: 'Linked List', category: 'ds' },
-  { icon: '[▮]', name: 'Array', category: 'ds' },
-  { icon: '⟨○○⟩', name: 'Deque', category: 'ds' },
-  { icon: '⬡', name: 'Heap', category: 'ds' },
-  
+  {
+    name: 'Stack',
+    category: 'ds',
+    shortName: 'STACK',
+    ascii: `
+  ┌───┐
+  │ a │
+  ├───┤
+  │ b │
+  ├───┤
+  │ c │
+  └───┘
+  TOP↑
+    `.trim()
+  },
+  {
+    name: 'Queue',
+    category: 'ds',
+    shortName: 'QUEUE',
+    ascii: `
+  IN  OUT
+  │    │
+  a→b→c→
+  └────┘
+  FIFO
+    `.trim()
+  },
+  {
+    name: 'Tree',
+    category: 'ds',
+    shortName: 'TREE',
+    ascii: `
+      ◉
+     ╱ ╲
+    ◉   ◉
+   ╱ ╲ ╱ ╲
+  ◉ ◉ ◉ ◉
+    `.trim()
+  },
+  {
+    name: 'Linked List',
+    category: 'ds',
+    shortName: 'LIST',
+    ascii: `
+  ◉→◉→◉→∅
+  │  │  │
+  a  b  c
+    `.trim()
+  },
+
   // Machine Learning
-  { icon: '⧈', name: 'Neural Network', category: 'ml' },
-  { icon: '◉◉◉', name: 'Clustering', category: 'ml' },
-  { icon: '↗↘', name: 'Regression', category: 'ml' },
-  { icon: '▓▒░', name: 'Classification', category: 'ml' },
-  { icon: '◇◆', name: 'Decision Tree', category: 'ml' },
-  { icon: '≋', name: 'Wave Pattern', category: 'ml' },
-  
+  {
+    name: 'Neural Network',
+    category: 'ml',
+    shortName: 'NN',
+    ascii: `
+  ○ ○ ○
+  │ X │
+  ○ ○ ○
+  │ X │
+  ○ ○ ○
+    `.trim()
+  },
+  {
+    name: 'K-Means',
+    category: 'ml',
+    shortName: 'KMEANS',
+    ascii: `
+  ◉   ◉
+  ○ × ○
+  ○   ○
+   ● ●
+   ○ ○
+    `.trim()
+  },
+  {
+    name: 'Decision Tree',
+    category: 'ml',
+    shortName: 'DTREE',
+    ascii: `
+       ◉ IF?
+      ╱ ╲
+    YES  NO
+    ↓    ↓
+    ◉    ◉
+   ╱╲   ╱╲
+  ○ ○ ○ ○
+    `.trim()
+  },
+
   // Geometry
-  { icon: '△', name: 'Triangle', category: 'geometry' },
-  { icon: '◻', name: 'Square', category: 'geometry' },
-  { icon: '⬢', name: 'Hexagon', category: 'geometry' },
-  { icon: '◉', name: 'Circle', category: 'geometry' },
-  { icon: '★', name: 'Star', category: 'geometry' },
-  { icon: '❖', name: 'Diamond', category: 'geometry' },
-  { icon: '⬟', name: 'Heptagon', category: 'geometry' },
-  { icon: '◈', name: 'Multi-point', category: 'geometry' },
-  
+  {
+    name: 'Convex Hull',
+    category: 'geometry',
+    shortName: 'HULL',
+    ascii: `
+    ○
+   ╱ ╲
+  ○   ○
+  ║   ║
+  ○───○
+    `.trim()
+  },
+  {
+    name: 'Line Intersection',
+    category: 'geometry',
+    shortName: 'INTERSECT',
+    ascii: `
+  ╱  ╲
+ ╱    ╲
+╱──●──╲
+╲  │   ╱
+ ╲ │  ╱
+  ╲│ ╱
+    `.trim()
+  },
+
   // Optimization
-  { icon: '⛰', name: 'Hill Climbing', category: 'opt' },
-  { icon: '⬆⬇', name: 'Gradient Descent', category: 'opt' },
-  { icon: '∿∿', name: 'Simulated Annealing', category: 'opt' },
-  { icon: '◐◑', name: 'Local Search', category: 'opt' },
-  { icon: '⟿', name: 'Dynamic Programming', category: 'opt' },
-  
+  {
+    name: 'Gradient Descent',
+    category: 'opt',
+    shortName: 'GD',
+    ascii: `
+      ◉
+     ╱ ╲
+    ◉   ◉
+   ╱     ╲
+  ●       ◉
+  ↓
+  min
+    `.trim()
+  },
+  {
+    name: 'Dynamic Programming',
+    category: 'opt',
+    shortName: 'DP',
+    ascii: `
+  ┌─┬─┬─┐
+  │1│1│1│
+  ├─┼─┼─┤
+  │1│2│3│
+  ├─┼─┼─┤
+  │1│3│●│
+  └─┴─┴─┘
+    `.trim()
+  },
+
   // String Algorithms
-  { icon: '≈≈', name: 'Pattern Matching', category: 'string' },
-  { icon: 'Ⰿ', name: 'KMP', category: 'string' },
-  { icon: '§', name: 'Trie', category: 'string' },
-  { icon: '◬', name: 'Suffix Array', category: 'string' },
-  
+  {
+    name: 'KMP',
+    category: 'string',
+    shortName: 'KMP',
+    ascii: `
+  HAYSTACK
+  ▼▼▼▼▼▼▼▼
+  abcabdab
+  ├─●─ ab
+  │   ├─●ab
+  │   │  ●
+  ─────
+  NEEDLE
+    `.trim()
+  },
+  {
+    name: 'Trie',
+    category: 'string',
+    shortName: 'TRIE',
+    ascii: `
+       root
+      ╱│╲
+     a b c
+     │ │ │
+     p c a
+     │   │
+     p t e
+    `.trim()
+  },
+
   // Compression
-  { icon: '⨸', name: 'Huffman', category: 'compress' },
-  { icon: '⧩', name: 'LZ77', category: 'compress' },
-  { icon: '▬', name: 'RLE', category: 'compress' },
-  
+  {
+    name: 'Huffman',
+    category: 'compress',
+    shortName: 'HUFFMAN',
+    ascii: `
+      ◉(ab)
+      ╱ ╲
+     ◉   c
+    ╱ ╲
+   a   b
+  5 9 12
+    `.trim()
+  },
+
   // Network
-  { icon: '◯═◯', name: 'Connection', category: 'net' },
-  { icon: '⊕⊗', name: 'Router', category: 'net' },
-  { icon: '↔↔', name: 'Bandwidth', category: 'net' },
-  { icon: '⚬', name: 'Node', category: 'net' },
-  
-  // Random/Probability
-  { icon: '∴', name: 'Random', category: 'random' },
-  { icon: '≈∼', name: 'Gaussian', category: 'random' },
-  { icon: '◿◾', name: 'Uniform', category: 'random' },
-  { icon: '∿', name: 'Distribution', category: 'random' },
-  
-  // Logic
-  { icon: '¬', name: 'NOT', category: 'logic' },
-  { icon: '∨', name: 'OR', category: 'logic' },
-  { icon: '∧', name: 'AND', category: 'logic' },
-  { icon: '⟺', name: 'IFF', category: 'logic' },
-  { icon: '⟹', name: 'Implies', category: 'logic' },
-  { icon: '⊢', name: 'Entails', category: 'logic' },
-  
-  // Sets
-  { icon: '∪', name: 'Union', category: 'set' },
-  { icon: '∩', name: 'Intersection', category: 'set' },
-  { icon: '\\', name: 'Difference', category: 'set' },
-  { icon: '∈', name: 'Element', category: 'set' },
-  { icon: '⊂', name: 'Subset', category: 'set' },
-  
-  // Special
-  { icon: '◊', name: 'Algorithm', category: 'special' },
-  { icon: '◈', name: 'Process', category: 'special' },
-  { icon: '◉', name: 'Hub', category: 'special' },
-  { icon: '⧨', name: 'Flow', category: 'special' },
-  { icon: '⟡', name: 'Node', category: 'special' },
-  { icon: '◎', name: 'Meta', category: 'special' },
+  {
+    name: 'Dijkstra Path',
+    category: 'net',
+    shortName: 'PATH',
+    ascii: `
+  ◉───5───◉
+  │  ╱ 10  │
+  2╱        ╲3
+  │╱        │
+  ◉────7────◉
+    `.trim()
+  },
+
+  // Backup patterns
+  {
+    name: 'Algorithm X',
+    category: 'generic',
+    shortName: 'X',
+    ascii: `
+  ╱╲  ╱╲
+ ╱  ╲╱  ╲
+ ╲  ╱╲  ╱
+  ╲╱  ╲╱
+    `.trim()
+  }
 ];
 
 /**
- * Generate a deterministic algorithm icon based on input string
- * Same input always produces same output
+ * Generate a consistent hash from a string
+ * Same input = same output (deterministic)
  */
-export function getAlgorithmIcon(input: string): AlgorithmIcon {
-  // Create a hash from the input string
+function hashCode(str: string): number {
   let hash = 0;
-  for (let i = 0; i < input.length; i++) {
-    const char = input.charCodeAt(i);
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
+    hash = hash & hash; // Convert to 32bit integer
   }
-  
-  // Use hash to select from library
-  const index = Math.abs(hash) % ALGORITHM_ICONS.length;
-  return ALGORITHM_ICONS[index];
+  return Math.abs(hash);
 }
 
 /**
- * Get a random algorithm icon
+ * Get a deterministic algorithm icon based on input string
+ * Same input will always return the same icon
+ */
+export function getAlgorithmIconWithArt(input: string): AlgorithmIcon {
+  const hash = hashCode(input);
+  const index = hash % ALGORITHM_LIBRARY.length;
+  return ALGORITHM_LIBRARY[index];
+}
+
+/**
+ * Get a random algorithm icon (actually pseudo-random based on seed)
  */
 export function getRandomAlgorithmIcon(): AlgorithmIcon {
-  const randomIndex = Math.floor(Math.random() * ALGORITHM_ICONS.length);
-  return ALGORITHM_ICONS[randomIndex];
+  const index = Math.floor(Math.random() * ALGORITHM_LIBRARY.length);
+  return ALGORITHM_LIBRARY[index];
 }
 
 /**
- * Get all icons of a specific category
+ * Get all available algorithms
  */
-export function getIconsByCategory(category: string): AlgorithmIcon[] {
-  return ALGORITHM_ICONS.filter(icon => icon.category === category);
+export function getAllAlgorithms(): AlgorithmIcon[] {
+  return ALGORITHM_LIBRARY;
 }
 
 /**
- * Get all available categories
+ * Legacy function for compatibility - returns icon object with old interface
  */
-export function getAllCategories(): string[] {
-  const categories = new Set(ALGORITHM_ICONS.map(icon => icon.category));
-  return Array.from(categories);
+export function getAlgorithmIcon(input: string) {
+  const algo = getAlgorithmIconWithArt(input);
+  return {
+    icon: '◉',
+    name: algo.shortName,
+    category: algo.category
+  };
 }
