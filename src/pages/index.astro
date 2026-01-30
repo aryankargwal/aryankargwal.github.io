@@ -180,36 +180,17 @@ const projects = allProjects
    .profile-picture {
      @apply relative;
      @apply w-56 h-56;
-     position: relative;
-     overflow: visible;
-   }
-
-   .profile-picture::before {
-     content: '';
-     position: absolute;
-     inset: -8px;
-     border: 3px solid #00f3ff;
-     box-shadow: -8px -8px 0 #262626, 8px 8px 0 #ccff00;
-     z-index: 1;
-     transition: all 0.3s ease;
-   }
-
-   .profile-picture-link:hover .profile-picture::before {
-     box-shadow: -12px -12px 0 #262626, 12px 12px 0 #ff0055;
    }
 
    .pfp-img {
      @apply w-56 h-56;
-     @apply border-2 border-black;
-     @apply shadow-hard;
+     @apply border-brutal border-black;
+     @apply shadow-hard hover:shadow-hard-cyan;
      @apply transition-all duration-300;
      @apply object-cover;
-     position: relative;
-     z-index: 2;
    }
 
    .profile-picture-link:hover .pfp-img {
-     @apply shadow-hard-cyan;
      @apply -translate-y-1;
    }
 
@@ -220,7 +201,6 @@ const projects = allProjects
      @apply opacity-0 hover:opacity-100;
      @apply transition-all duration-300;
      @apply cursor-pointer;
-     border: 2px solid black;
      z-index: 3;
    }
 

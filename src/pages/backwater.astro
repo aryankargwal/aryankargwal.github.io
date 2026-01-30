@@ -7,6 +7,7 @@ import ExternalBlog from '../components/ExternalBlog.astro';
 import GoodreadsBooks from '../components/GoodreadsBooks.astro';
 import YouTubeVideos from '../components/YouTubeVideos.astro';
 import GitHubGraph from '../components/GitHubGraph.astro';
+import { getAlgorithmIcon } from '../utils/algorithmIcons';
 import { getCollection } from 'astro:content';
 
 // Fetch projects
@@ -70,24 +71,28 @@ const projects = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.
             </div>
             <p class="section-desc">Systems, prototypes & research work</p>
           </button>
-          <div class="section-content" id="projects" style="display: none;">
+           <div class="section-content" id="projects" style="display: none;">
             <div class="projects-grid">
-              {projects.map((project) => (
-                <a href={`/projects/${project.slug}`} class="project-card-link">
-                  <div class="project-card">
-                    <div class="project-header">
-                      <h3 class="project-title">{project.data.title}</h3>
-                      <span class="project-status">{project.data.status}</span>
+              {projects.map((project) => {
+                const icon = getAlgorithmIcon(project.data.title);
+                return (
+                  <a href={`/projects/${project.slug}`} class="project-card-link" title={icon.name}>
+                    <div class="project-card">
+                      <div class="project-algo-icon">{icon.icon}</div>
+                      <div class="project-header">
+                        <h3 class="project-title">{project.data.title}</h3>
+                        <span class="project-status">{project.data.status}</span>
+                      </div>
+                      <p class="project-description">{project.data.description}</p>
+                      <div class="project-tags">
+                        {project.data.tags.map(tag => (
+                          <span class="tag">{tag}</span>
+                        ))}
+                      </div>
                     </div>
-                    <p class="project-description">{project.data.description}</p>
-                    <div class="project-tags">
-                      {project.data.tags.map(tag => (
-                        <span class="tag">{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                </a>
-              ))}
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -306,11 +311,16 @@ const projects = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.
   .project-card {
     @apply p-6 border-brutal border-black bg-dark-grey shadow-hard;
     @apply hover:shadow-hard-cyan transition-all duration-200;
-    @apply cursor-pointer;
+    @apply cursor-pointer relative;
   }
 
   .project-card:hover {
     @apply -translate-y-1;
+  }
+
+  .project-algo-icon {
+    @apply absolute top-3 right-3 text-2xl font-bold text-cyber-cyan font-mono;
+    @apply opacity-60;
   }
 
   .project-header {
