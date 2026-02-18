@@ -19,7 +19,7 @@ const GITHUB_GRAPHQL_API = 'https://api.github.com/graphql';
 // You'll need a GitHub Personal Access Token for this
 // Get one at: https://github.com/settings/tokens
 // Only needs 'read:user' scope
-const GITHUB_TOKEN = import.meta.env.GITHUB_TOKEN || '';
+const GITHUB_TOKEN = import.meta.env.GH_TOKEN || '';
 
 let stats: GitHubStats = {
   totalContributions: 0,
