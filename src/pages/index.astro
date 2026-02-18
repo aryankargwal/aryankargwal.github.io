@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import GoodreadsBooks from '../components/GoodreadsBooks.astro';
-import GitHubGraph from '../components/GitHubGraph.astro';
 import YouTubeVideos from '../components/YouTubeVideos.astro';
 import contentData from '../data/content.json';
 import { generateProbabilityGrid } from '../utils/probabilityGrids';
@@ -220,13 +219,6 @@ const blogsWithGrids = featuredBlogs.map(blog => {
     <section id="input" class="section-brutal">
       <div class="container-brutal">
         <GoodreadsBooks />
-      </div>
-    </section>
-
-    <!-- The Output: GitHub Activity -->
-    <section id="output" class="section-brutal">
-      <div class="container-brutal">
-        <GitHubGraph />
       </div>
     </section>
 
