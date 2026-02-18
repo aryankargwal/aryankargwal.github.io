@@ -18,11 +18,6 @@ interface BlogPost {
 // Combine all writing content
 let allPosts: BlogPost[] = [];
 
-// Add blog posts
-if (contentData.blog_posts) {
-  allPosts = [...allPosts, ...contentData.blog_posts];
-}
-
 // Add systems writing (add date for sorting)
 if (contentData.systems_writing) {
   allPosts = [...allPosts, ...contentData.systems_writing.map(p => ({ ...p, date: '2025-01-01' }))];

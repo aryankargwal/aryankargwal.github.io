@@ -1,28 +1,28 @@
 ---
-title: "Multi-Robot SLAM with Distributed Consensus"
+title: "Multi-Robot SLAM: Formal Language Verification"
 date: 2023-11-20
-description: "Decentralized SLAM framework for heterogeneous robot teams. Implements consensus-based map merging with formal verification of convergence guarantees."
-tags: ["Robotics", "SLAM", "Distributed Systems", "ROS2"]
+description: "Formal language verification approach for multi-agent SLAM systems. Uses temporal logic specifications to ensure correctness guarantees in decentralized mapping and localization tasks."
+tags: ["Robotics", "SLAM", "Formal Verification", "Multi-Agent Systems"]
 status: "Research Prototype"
-repoUrl: "https://github.com/aryankargwal/multi-robot-slam"
-paperUrl: "https://arxiv.org/abs/placeholder"
+demoUrl: "https://www.youtube.com/watch?v=zmUqyO2wAq4"
 featured: true
 ---
 
-## Abstract
+## Overview
 
-This work presents a novel approach to multi-robot SLAM that eliminates the need for centralized coordination. Each robot maintains a local map and exchanges updates with neighbors using a gossip-based protocol.
+This research focuses on formal language verification methods for multi-robot SLAM, specifically addressing the correctness and safety guarantees of decentralized mapping in multi-agent systems. The work leverages distributed SLAM to create super-segments that are merged using visual cues, enabling robust handling of uncertain environments.
 
-## Innovation
+## Key Contributions
 
-- **Byzantine Fault Tolerance**: System remains operational even with malicious agents
-- **Formal Verification**: Convergence proofs using Lyapunov stability analysis
-- **Real-time Performance**: Sub-10ms consensus updates on embedded hardware
+- **SLAM-Based Super-Segmentation**: Uses SLAM-derived features to create stable super-segments for map regions
+- **Visual Feature Merging**: Merges super-segments using visual cues to improve robustness in uncertain conditions
+- **Formal Verification Framework**: Applies formal language methods to verify correctness properties of the system
+- **Challenging Environments**: Specifically designed for semantically ambiguous scenarios (ice segmentation, water-snow discrimination)
 
-## Experimental Results
+## Technical Approach
 
-Tested with teams of 4-8 Turtlebot3 robots in GPS-denied environments. Achieved 15% improvement in map accuracy compared to centralized approaches.
+The system leverages SLAM outputs to partition the environment into super-segments, which are then intelligently merged based on visual similarity metrics. This is particularly effective in scenarios with high visual ambiguity where water, snow, and ice can appear nearly identical.
 
-## Publications
+## Status
 
-Paper under review at ICRA 2025.
+Ongoing research with continued development. More details coming soon.

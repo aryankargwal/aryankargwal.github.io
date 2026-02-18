@@ -13,8 +13,8 @@
     }
   },
   
-   "research_talks": [
-     {
+    "research_talks": [
+      {
        "title": "AI for Safe and Efficient Robot Path Planning",
        "platform": "YouTube",
        "type": "PhD Talk",
@@ -22,6 +22,56 @@
        "date": "2024-10-15",
        "excerpt": "Exploring formal verification methods for safe and efficient autonomous robot path planning using AI techniques.",
        "badge": "Formal Verification",
+       "featured": true
+     },
+     {
+       "title": "How to Build a Slack Chatbot in 5 Minutes (No Code + Emoji Reaction Triggers)",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=75ZuvBPHrTw",
+       "date": "2025-06-09",
+       "excerpt": "A step-by-step guide to building a Slack chatbot using Botpress with no code, featuring emoji reaction triggers.",
+       "badge": "Botpress",
+       "featured": true
+     },
+     {
+       "title": "Deploy Qwen 2 VL for Video Intelligence",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=hsVdRqO65io",
+       "date": "2024-12-10",
+       "excerpt": "Deploy Qwen 2 VL 2B for video intelligence in 3 easy steps with a full Streamlit tutorial.",
+       "badge": "VLM",
+       "featured": true
+     },
+     {
+       "title": "How to Build an SMS Chatbot in Under 10 Minutes",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=s5lWfx7QRvc",
+       "date": "2025-05-09",
+       "excerpt": "Learn to build an SMS chatbot that responds to user messages via Twilio and speaks with a unique personality.",
+       "badge": "Botpress",
+       "featured": true
+     },
+     {
+       "title": "OmniParser in Less Than 100 Lines of Code",
+       "platform": "YouTube",
+       "type": "Demo",
+       "url": "https://www.youtube.com/watch?v=-FvmJqWXH-I",
+       "date": "2024-11-15",
+       "excerpt": "Using Microsoft's OmniParser for computer automation in under 100 lines of code.",
+       "badge": "Computer Vision",
+       "featured": true
+     },
+     {
+       "title": "How to Build a RAG Chatbot",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=AOTiEbIOu98",
+       "date": "2025-01-22",
+       "excerpt": "Build a RAG-powered chatbot in under 10 minutes using Botpress by importing data from websites and documents.",
+       "badge": "Botpress",
        "featured": true
      },
      {
@@ -33,16 +83,113 @@
        "excerpt": "Practical demonstration of logging and monitoring ReACT-based agentic pipelines in production environments.",
        "badge": "Agent Ops",
        "featured": true
-     }
+     },
+     {
+       "title": "Add a Customer AI Chatbot to Your Framer Website",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=3RMOyqnJ4hc",
+       "date": "2025-08-07",
+       "excerpt": "Deploy a customer AI chatbot to your Framer website using Botpress, enhancing visitor engagement.",
+       "badge": "Botpress",  
+       "featured": true
+     },
+     {
+       "title": "Image Captioning with Moondream VLM",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=9NspeuVio6I",
+       "date": "2024-10-20",
+       "excerpt": "Image captioning using Moondream VLM with Streamlit — revisiting a college project through the lens of modern VLMs.",
+       "badge": "VLM",
+       "featured": true
+     },
+     {
+       "title": "How to Build a WordPress Chatbot",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=PzGFVqOzDsk",
+       "date": "2025-02-24",
+       "excerpt": "Create a WordPress chatbot that answers queries and generates leads, integrated seamlessly into your site.",
+       "badge": "Botpress",
+       "featured": true
+     },
+     {
+       "title": "How to Build a Telegram Chatbot in 10 Minutes",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=KIYGklgl4bI",
+       "date": "2025-03-10",
+       "excerpt": "Build a fully functional Telegram chatbot in under 10 minutes using Botpress.",
+       "badge": "Botpress",
+       "featured": true
+     },
+     {
+       "title": "How to Build an AI Appointment Chatbot with Calendly",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=CbUB2eNYTYU",
+       "date": "2025-04-05",
+       "excerpt": "Build an AI-powered appointment chatbot that integrates with Calendly for automated scheduling.",
+       "badge": "Botpress",
+       "featured": true
+     },
+     {
+       "title": "Build a Website Chatbot in 3 Steps",
+       "platform": "YouTube",
+       "type": "Tutorial",
+       "url": "https://www.youtube.com/watch?v=enozAzfT7rI",
+       "date": "2025-02-18",
+       "excerpt": "Deploy a website chatbot in just 3 steps using Botpress in 2025.",
+       "badge": "Botpress",
+       "featured": true
+     },
+     {
+        "title": "How to Build a Wix Chatbot",
+        "platform": "YouTube",
+        "type": "Tutorial",
+        "url": "https://www.youtube.com/watch?v=rG7dguRDFIA",
+        "date": "2025-01-31",
+        "excerpt": "Guide to creating a context-aware chatbot for Wix websites to engage visitors and provide automated support.",
+        "badge": "Botpress",
+        "featured": false
+      }
    ],
 
    "systems_writing": [
+      {
+       "title": "Why AI Agents Break: A Field Analysis of Production Failures",
+        "platform": "Arize AI",
+        "category": "Analysis",
+        "url": "https://arize.com/blog/common-ai-agent-failures/",
+        "date": "2026-01-29",
+        "excerpt": "A comprehensive field analysis of production failures in AI agents. Explores the root causes and failure patterns that occur when AI agents break in real-world deployments.",
+        "featured": true
+      },
+     {
+       "title": "Agent Frameworks",
+       "platform": "Arize AI",
+       "category": "Architecture",
+       "url": "https://arize.com/ai-agents/agent-frameworks/",
+       "date": "2026-01-20",
+       "excerpt": "An overview of popular agent frameworks and multi-agent frameworks. Explores how AI agent frameworks act as control layers around models, managing execution order, tool invocation, state changes, and component interactions.",
+       "featured": true
+     },
+     {
+       "title": "Top 5 AI Prompt Management Tools of 2025",
+       "platform": "Arize AI",
+       "category": "Tools & Platforms",
+       "url": "https://arize.com/blog/top-5-ai-prompt-management-tools-of-2025/",
+       "date": "2026-01-18",
+       "excerpt": "Compare the best prompt management platforms — Arize AX, Arize Phoenix, PromptLayer, Langfuse, and PromptHub — to find the right fit for your team's workflow and scale.",
+       "featured": true
+     },
      {
        "title": "Benchmarks Are Broken: 5 Operator Metrics",
        "platform": "SeedToScale",
        "category": "Strategy",
        "url": "https://www.seedtoscale.com/blog/benchmarks-are-broken-5-operator-metrics-every-ai-exec-should-track",
-       "date": "2024-12-15",
+       "date": "2026-01-15",
        "excerpt": "Explore the 5 critical metrics AI executives should track beyond traditional benchmarks to measure real operational performance.",
        "featured": true
      },
@@ -51,7 +198,7 @@
        "platform": "SeedToScale",
        "category": "Market Analysis",
        "url": "https://www.seedtoscale.com/blog/the-platform-gravity-problem-why-the-middle-is-collapsing-in-ai",
-       "date": "2024-11-20",
+       "date": "2026-01-12",
        "excerpt": "Analyzing why the middle market is collapsing in AI and how platform gravity is reshaping competitive dynamics.",
        "featured": true
      },
@@ -60,17 +207,8 @@
        "platform": "SeedToScale",
        "category": "Product",
        "url": "https://www.seedtoscale.com/blog/frugal-innovation-why-constraint-breeds-better-ai-products",
-       "date": "2024-10-30",
+       "date": "2026-01-10",
        "excerpt": "How constraints and frugal innovation principles lead to better, more efficient AI products in competitive markets.",
-       "featured": true
-     },
-     {
-       "title": "Agent Frameworks: A Handbook",
-       "platform": "Arize AI",
-       "category": "Architecture",
-       "url": "https://arize.com/ai-agents/agent-frameworks/",
-       "date": "2024-09-15",
-       "excerpt": "Comprehensive guide to modern AI agent frameworks, their architectures, and best practices for implementation.",
        "featured": true
      },
      {
@@ -78,7 +216,7 @@
        "platform": "Arize AI",
        "category": "Security",
        "url": "https://arize.com/blog/how-observability-driven-sandboxing-secures-ai-agents/",
-       "date": "2024-08-20",
+       "date": "2026-01-22",
        "excerpt": "Securing AI agents through observability-driven sandboxing: techniques for monitoring and controlling agent behavior.",
        "featured": true
      }
@@ -86,21 +224,21 @@
 
    "technical_blogs": [
      {
+       "title": "Top 7 Agent Supervision Platforms",
+       "platform": "Dev.to",
+       "category": "Agent Ops",
+       "url": "https://dev.to/aryankargwal/top-ai-7-agent-supervision-platforms-in-2025-2767",
+       "date": "2025-10-27",
+       "excerpt": "Comparative analysis of the best AI agent supervision platforms available in 2025 for production systems, featuring 15+ min read deep dive.",
+       "featured": true
+     },
+     {
        "title": "DeepSeek-R1: Redefining RL in AI",
        "platform": "Dev.to",
        "category": "RL",
        "url": "https://dev.to/aryankargwal/deepseek-r1-redefining-the-reinforcement-learning-in-ai-47e6",
-       "date": "2024-12-01",
+       "date": "2025-02-10",
        "excerpt": "Deep dive into how DeepSeek-R1 is revolutionizing reinforcement learning approaches in modern AI systems.",
-       "featured": true
-     },
-     {
-       "title": "Top 7 Agent Supervision Platforms",
-       "platform": "Dev.to",
-       "category": "Agent Ops",
-       "url": "https://dev.to/aryankargwal/top-7-ai-agent-supervision-platforms-in-2025",
-       "date": "2025-01-15",
-       "excerpt": "Comparative analysis of the best AI agent supervision platforms available in 2025 for production systems.",
        "featured": true
      },
      {
@@ -108,49 +246,8 @@
        "platform": "Botpress",
        "category": "Engineering",
        "url": "https://botpress.com/blog/build-rag-chatbot",
-       "date": "2024-07-10",
        "excerpt": "Step-by-step engineering guide to building production-ready RAG-powered chatbot applications.",
        "featured": false
      }
-   ],
-
-  "blog_posts": [
-    {
-      "title": "Your First Blog Post Title",
-      "platform": "Medium",
-      "url": "https://medium.com/@aryankargwal/your-article",
-      "date": "2024-01-15",
-      "description": "Brief description of what this article is about. Keep it to 2-3 sentences max.",
-      "tags": ["AI", "Research", "Systems"],
-      "featured": false
-    },
-    {
-      "title": "Another Great Article",
-      "platform": "Dev.to",
-      "url": "https://dev.to/aryankargwal/another-article",
-      "date": "2023-12-10",
-      "description": "Another insightful piece about your research or technical work.",
-      "tags": ["Robotics", "ML", "Engineering"],
-      "featured": false
-    }
-  ],
-
-  "youtube_videos": [
-    {
-      "title": "Your Video Title Here",
-      "videoId": "dQw4w9WgXcQ",
-      "date": "2024-01-20",
-      "description": "Brief description of what this video covers.",
-      "tags": ["Tutorial", "Research", "Demo"],
-      "featured": false
-    },
-    {
-      "title": "Another Awesome Video",
-      "videoId": "jNQXAC9IVRw",
-      "date": "2023-11-15",
-      "description": "Explanation or walkthrough of your project or research.",
-      "tags": ["Presentation", "Technical", "Deep Dive"],
-      "featured": false
-    }
-  ]
+   ]
 }

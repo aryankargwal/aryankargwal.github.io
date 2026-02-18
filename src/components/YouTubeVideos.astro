@@ -16,37 +16,29 @@ interface Video {
 // Combine youtube videos and research talks
 let allVideos: Video[] = [];
 
-// Add youtube videos
-if (contentData.youtube_videos) {
-  allVideos = [...allVideos, ...contentData.youtube_videos];
-}
-
 // Add research talks (extract videoId from URL)
 if (contentData.research_talks) {
   allVideos = [...allVideos, ...contentData.research_talks.map(talk => {
     const match = talk.url.match(/[?&]v=([^&]+)/);
     const videoId = match ? match[1] : '';
     return {
-      title: talk.title,
-      videoId: videoId,
-      url: talk.url,
-      date: '2025-01-01',
-      tags: talk.badge ? [talk.badge] : [],
-      type: talk.type,
-      featured: talk.featured
-    };
+       title: talk.title,
+       videoId: videoId,
+       url: talk.url,
+       date: talk.date || '2025-01-01',
+       description: talk.excerpt,
+       tags: talk.badge ? [talk.badge] : [],
+       type: talk.type,
+       featured: talk.featured
+     };
   })];
 }
 
 // Filter to only featured videos
 const featuredVideos = allVideos.filter(v => v.featured !== false);
 
-// Sort by date (newest first) and limit to 3
-const sortedVideos = featuredVideos.sort((a, b) => {
-  const dateA = a.date ? new Date(a.date).getTime() : 0;
-  const dateB = b.date ? new Date(b.date).getTime() : 0;
-  return dateB - dateA;
-}).slice(0, 3); // Limit to 3 featured videos
+// Filter to only featured videos and limit to 6
+const sortedVideos = featuredVideos.slice(0, 6);
 
 function getVideoLink(video: Video): string {
   if (video.url) return video.url;
@@ -68,12 +60,10 @@ function getVideoLink(video: Video): string {
       </p>
     </div>
     <a 
-      href={`https://youtube.com/@${contentData.personal.social.github}`}
-      target="_blank"
-      rel="noopener"
+      href="/videos"
       class="text-sm font-mono hover:text-error-red"
     >
-      YouTube Channel →
+      All Videos →
     </a>
   </div>
 

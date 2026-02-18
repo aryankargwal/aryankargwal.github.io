@@ -1,31 +1,31 @@
 ---
-title: "Benchpark: HPC Performance Benchmarking Suite"
+title: "BenchYard: Edge Device Benchmarking & LLM Inferencing"
 date: 2024-01-15
-description: "A modular framework for automating performance benchmarking across heterogeneous HPC systems. Supports multi-architecture deployment and reproducible experiment pipelines."
-tags: ["HPC", "Performance", "Automation", "Python"]
-status: "Production"
-repoUrl: "https://github.com/aryankargwal/benchpark"
+description: "Edge devices benchmarking and inferencing for LLMs. Optimizing large language model deployment and performance evaluation across edge computing environments."
+tags: ["LLM", "Edge Computing", "Benchmarking", "Inference", "Python"]
+status: "Active Development"
+demoUrl: "https://aryankargwal.github.io/benchyard"
 featured: true
 ---
 
 ## Overview
 
-Benchpark is a comprehensive benchmarking suite designed for high-performance computing environments. It automates the deployment, execution, and analysis of performance benchmarks across diverse hardware architectures.
+BenchYard is a comprehensive platform for benchmarking and optimizing large language model (LLM) inference on edge devices. It provides tools for performance evaluation, model optimization, and deployment across heterogeneous edge computing environments.
 
 ## Key Features
 
-- **Multi-Architecture Support**: Seamless deployment across x86, ARM, and GPU-accelerated systems
-- **Reproducible Experiments**: Containerized workflows ensure consistent results
-- **Automated Analysis**: Built-in statistical analysis and visualization pipelines
-- **Extensible Framework**: Plugin architecture for custom benchmarks
+- **Edge Device Optimization**: Benchmark LLMs across diverse edge hardware (mobile, IoT, embedded systems)
+- **Inference Performance Metrics**: Detailed latency, throughput, and memory utilization analysis
+- **Model Optimization**: Quantization, pruning, and distillation pipelines for edge deployment
+- **Real-time Monitoring**: Performance profiling and resource tracking during inference
 
 ## Technical Stack
 
 - Python 3.10+
-- Spack for dependency management
-- Slurm integration for job scheduling
-- Prometheus for metrics collection
+- ONNX for model optimization
+- PyTorch/TensorFlow inference optimization
+- Edge device SDKs (Android, iOS, embedded Linux)
 
-## Impact
+## Status
 
-Deployed at major HPC centers for continuous performance monitoring and regression testing.
+Currently in active development with expanding support for various edge architectures and LLM variants.

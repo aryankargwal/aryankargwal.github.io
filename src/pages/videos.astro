@@ -1,0 +1,246 @@
+---
+import Layout from '../layouts/Layout.astro';
+import contentData from '../data/content.json';
+
+// Build video list from research_talks
+const allVideos = contentData.research_talks.map(talk => {
+  const match = talk.url.match(/[?&]v=([^&]+)/);
+  const videoId = match ? match[1] : '';
+  return {
+    title: talk.title,
+    videoId,
+    url: talk.url,
+    date: talk.date || '2025-01-01',
+    excerpt: talk.excerpt,
+    type: talk.type,
+    badge: talk.badge,
+    featured: talk.featured
+  };
+});
+
+// Sort by date (newest first), show all
+const sortedVideos = allVideos.sort((a, b) =>
+  new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+---
+
+<Layout title="All Videos - Aryan Kargwal">
+  <main class="min-h-screen py-20">
+    <div class="container-brutal">
+      <!-- Back Button -->
+      <div class="mb-8">
+        <a href="/" class="back-button">
+          ← Back to Home
+        </a>
+      </div>
+
+      <!-- Page Header -->
+      <div class="section-header mb-12">
+        <h1 class="section-title">
+          <span class="title-bracket">[</span>
+          ALL VIDEOS
+          <span class="title-bracket">]</span>
+        </h1>
+        <p class="font-mono text-off-white/60">
+          Talks, demos & technical tutorials
+        </p>
+      </div>
+
+      <!-- 3-Column Grid -->
+      <div class="videos-grid">
+        {sortedVideos.map((video, index) => (
+          <a
+            href={video.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="video-card group"
+          >
+            <!-- Card Number -->
+            <div class="card-number">
+              #{String(index + 1).padStart(2, '0')}
+            </div>
+
+            <!-- Thumbnail -->
+            <div class="thumbnail-wrapper">
+              {video.videoId && (
+                <img
+                  src={`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`}
+                  alt={video.title}
+                  class="thumbnail"
+                  loading="lazy"
+                />
+              )}
+              <div class="play-overlay">
+                <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="card-content">
+              <div class="card-meta">
+                {video.type && (
+                  <span class="type-badge">{video.type}</span>
+                )}
+                <span class="date-text">
+                  {new Date(video.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short'
+                  })}
+                </span>
+              </div>
+
+              <h3 class="card-title">{video.title}</h3>
+
+              <p class="card-excerpt">{video.excerpt}</p>
+
+              {video.badge && (
+                <div class="badge">{video.badge}</div>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .back-button {
+    @apply inline-block;
+    @apply font-mono text-sm font-bold;
+    @apply text-off-white bg-dark-grey;
+    @apply px-4 py-2;
+    @apply border-brutal border-black;
+    @apply shadow-hard;
+    @apply no-underline;
+    text-decoration: none;
+  }
+
+  .back-button:hover {
+    @apply shadow-hard-red;
+  }
+
+  .container-brutal {
+    @apply max-w-7xl mx-auto px-6 md:px-12;
+  }
+
+  .section-header {
+    @apply text-center;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-5xl font-black mb-4;
+    @apply text-off-white;
+  }
+
+  .title-bracket {
+    @apply text-error-red;
+  }
+
+  /* 3-Column Grid */
+  .videos-grid {
+    @apply grid gap-6;
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  /* Video Card */
+  .video-card {
+    @apply relative;
+    @apply bg-dark-grey border-brutal border-black;
+    @apply shadow-hard hover:shadow-hard-red;
+    @apply transition-all duration-300;
+    @apply flex flex-col;
+    @apply overflow-hidden;
+    @apply no-underline;
+    text-decoration: none;
+  }
+
+  .video-card:hover {
+    @apply -translate-y-1;
+  }
+
+  /* Card Number */
+  .card-number {
+    @apply absolute top-3 right-3;
+    @apply font-mono text-xs font-bold;
+    @apply text-error-red;
+    @apply bg-black/60 px-2 py-1;
+    z-index: 10;
+  }
+
+  /* Thumbnail */
+  .thumbnail-wrapper {
+    @apply relative aspect-video bg-black;
+    @apply border-b-brutal border-black;
+  }
+
+  .thumbnail {
+    @apply w-full h-full object-cover;
+    @apply transition-all duration-300;
+  }
+
+  .video-card:hover .thumbnail {
+    @apply opacity-80;
+  }
+
+  .play-overlay {
+    @apply absolute inset-0;
+    @apply flex items-center justify-center;
+    @apply pointer-events-none;
+  }
+
+  .play-icon {
+    @apply w-14 h-14 text-off-white;
+    @apply transition-all duration-300;
+    filter: drop-shadow(2px 2px 0px #000);
+  }
+
+  .video-card:hover .play-icon {
+    @apply text-error-red scale-110;
+    filter: drop-shadow(4px 4px 0px #000);
+  }
+
+  /* Card Content */
+  .card-content {
+    @apply p-5 flex-1 flex flex-col gap-3;
+  }
+
+  .card-meta {
+    @apply flex items-center gap-3 flex-wrap;
+    @apply font-mono text-xs;
+  }
+
+  .type-badge {
+    @apply px-2 py-1;
+    @apply bg-error-red text-black font-bold;
+    @apply border border-black;
+    @apply font-mono text-xs uppercase;
+  }
+
+  .date-text {
+    @apply text-off-white/60;
+  }
+
+  .card-title {
+    @apply text-lg font-black text-off-white;
+    @apply line-clamp-2;
+    @apply group-hover:text-cyber-cyan transition-colors;
+  }
+
+  .card-excerpt {
+    @apply text-sm text-off-white/80;
+    @apply line-clamp-3;
+    @apply flex-1;
+    @apply font-mono;
+  }
+
+  .badge {
+    @apply inline-block self-start;
+    @apply px-3 py-1;
+    @apply bg-acid-lime text-black;
+    @apply font-mono text-xs font-bold;
+    @apply border border-black;
+  }
+</style>

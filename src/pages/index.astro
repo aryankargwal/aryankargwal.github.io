@@ -21,7 +21,7 @@ const featuredBlogs = [
       title: blog.title,
       platform: blog.platform,
       url: blog.url,
-      date: blog.date,
+      date: blog.date || '2000-01-01',
       excerpt: blog.excerpt,
       category: blog.category
     })),
@@ -31,7 +31,7 @@ const featuredBlogs = [
       title: blog.title,
       platform: blog.platform,
       url: blog.url,
-      date: blog.date,
+      date: blog.date || '2000-01-01',
       excerpt: blog.excerpt,
       category: blog.category
     }))
@@ -106,7 +106,7 @@ const blogsWithGrids = featuredBlogs.map(blog => {
     </section>
 
     <!-- Lab Bench: Research Projects (Bento Grid) -->
-    <section id="lab-bench" class="section-brutal">
+    <section id="lab-bench" class="section-brutal" style="padding-top: 4rem;">
       <div class="container-brutal">
         <!-- Section header -->
         <div class="section-header">

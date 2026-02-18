@@ -3,7 +3,7 @@ interface Props {
   title: string;
   description: string;
   tags: string[];
-  status: 'Production' | 'Research Prototype' | 'Archived';
+  status: 'Production' | 'Research Prototype' | 'Active Development' | 'Archived';
   repoUrl?: string;
   paperUrl?: string;
   demoUrl?: string;
@@ -12,71 +12,68 @@ interface Props {
 
 const { title, description, tags, status, repoUrl, paperUrl, demoUrl, slug } = Astro.props;
 
+// Primary link: prefer demo > paper > repo, no internal details page
+const primaryUrl = demoUrl || paperUrl || repoUrl;
+
 // Status badge styling
 const statusStyles = {
   'Production': 'bg-acid-lime text-black border-black',
   'Research Prototype': 'bg-cyber-cyan text-black border-black',
+  'Active Development': 'bg-yellow-400 text-black border-black',
   'Archived': 'bg-error-red text-off-white border-black'
 };
 ---
 
 <article class="project-card group relative">
-  <!-- Status sticker (taped on aesthetic) -->
+  <!-- Status sticker -->
   <div class={`status-sticker ${statusStyles[status]}`}>
     <span class="font-mono text-xs font-semibold uppercase tracking-wider">
       {status}
     </span>
-    <!-- Tape effect -->
-    <div class="tape tape-left"></div>
-    <div class="tape tape-right"></div>
   </div>
 
   <!-- Card content -->
   <div class="card-inner">
-    <!-- Abstract pattern background (CSS-generated) -->
     <div class="pattern-bg"></div>
     
-    <div class="content-wrapper">
-      <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-cyan transition-colors">
-        {title}
-      </h3>
+    <!-- Content Section -->
+    <div class="content-section">
+      <h3 class="card-title">{title}</h3>
       
-      <p class="font-mono text-sm text-off-white/80 mb-4 line-clamp-3">
-        {description}
-      </p>
+      <p class="card-description">{description}</p>
       
       <!-- Tags -->
-      <div class="flex flex-wrap gap-2 mb-4">
+      <div class="tags-container">
         {tags.slice(0, 3).map(tag => (
-          <span class="tag">
-            {tag}
-          </span>
+          <span class="tag">{tag}</span>
         ))}
       </div>
-      
-      <!-- Links -->
-      <div class="flex gap-3 text-sm font-mono">
-        {repoUrl && (
-          <a href={repoUrl} target="_blank" rel="noopener" class="link-brutal">
-            GitHub →
-          </a>
-        )}
-        {paperUrl && (
-          <a href={paperUrl} target="_blank" rel="noopener" class="link-brutal">
-            Paper →
-          </a>
-        )}
-        {demoUrl && (
-          <a href={demoUrl} target="_blank" rel="noopener" class="link-brutal">
-            Demo →
-          </a>
-        )}
-        <a href={`/projects/${slug}`} class="link-brutal ml-auto">
-          Details →
+    </div>
+    
+    <!-- Links Section -->
+    <div class="links-section">
+      {demoUrl && (
+        <a href={demoUrl} target="_blank" rel="noopener" class="link-brutal">
+          Demo →
         </a>
-      </div>
+      )}
+      {paperUrl && (
+        <a href={paperUrl} target="_blank" rel="noopener" class="link-brutal">
+          Paper →
+        </a>
+      )}
+      {repoUrl && (
+        <a href={repoUrl} target="_blank" rel="noopener" class="link-brutal">
+          GitHub →
+        </a>
+      )}
     </div>
   </div>
+
+  <!-- Full card clickable overlay to primary URL -->
+  {primaryUrl && (
+    <a href={primaryUrl} target="_blank" rel="noopener" class="card-overlay" aria-label={title}></a>
+  )}
 </article>
 
 <style>
@@ -84,7 +81,6 @@ const statusStyles = {
     @apply relative border-brutal border-black bg-dark-grey;
     @apply shadow-hard hover:shadow-hard-cyan;
     @apply transition-all duration-200;
-    @apply overflow-hidden;
   }
   
   .project-card:hover {
@@ -94,110 +90,97 @@ const statusStyles = {
   .project-card:active {
     @apply shadow-hard-collapsed translate-x-1 translate-y-1;
   }
-  
-  /* Status sticker with tape effect */
+
+  /* Full card click overlay */
+  .card-overlay {
+    @apply absolute inset-0 z-10;
+  }
+
+  /* Links sit above the overlay */
+  .links-section a {
+    @apply relative z-20;
+  }
+
+  /* Status sticker */
   .status-sticker {
-    @apply absolute top-4 right-6 z-20;
+    @apply absolute -top-4 right-4 z-30;
     @apply px-3 py-1 border-brutal;
     @apply shadow-hard-sm;
     @apply rotate-2;
     transform-origin: center;
+    white-space: nowrap;
   }
   
-  /* Tape strips */
-  .tape {
-    @apply absolute w-8 h-3 bg-off-white/20;
-    @apply border border-black/10;
-    top: -5px;
-  }
-  
-  .tape-left {
-    left: -2px;
-    transform: rotate(-25deg);
-  }
-  
-  .tape-right {
-    right: -2px;
-    transform: rotate(25deg);
-  }
-  
-  .project-card:hover {
-    @apply -translate-y-1;
-  }
-  
-  .project-card:active {
-    @apply shadow-hard-collapsed translate-x-1 translate-y-1;
-  }
-  
-  /* Status sticker with tape effect */
-  .status-sticker {
-    @apply absolute top-4 right-4 z-20;
-    @apply px-3 py-1 border-brutal;
-    @apply shadow-hard-sm;
-    @apply rotate-2;
-    transform-origin: center;
-  }
-  
-  /* Tape strips */
-  .tape {
-    @apply absolute w-8 h-4 bg-off-white/20;
-    @apply border border-black/10;
-    top: -8px;
-  }
-  
-  .tape-left {
-    left: -4px;
-    transform: rotate(-25deg);
-  }
-  
-  .tape-right {
-    right: -4px;
-    transform: rotate(25deg);
-  }
-  
+  /* Card inner */
   .card-inner {
-    @apply relative p-6 pt-16;
-    min-height: 280px;
+    @apply relative p-6 pt-8;
+    @apply flex flex-col;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
   
-  /* Status sticker with tape effect */
-  .status-sticker {
-    @apply absolute top-2 right-4 z-20;
-    @apply px-3 py-1 border-brutal;
-    @apply shadow-hard-sm;
-    @apply rotate-2;
-    transform-origin: center;
-  }
-  
-  /* Abstract CSS pattern background */
+  /* Pattern background */
   .pattern-bg {
     @apply absolute inset-0 opacity-0;
-    background-image: none;
   }
   
-  .content-wrapper {
-    @apply relative z-10;
+  /* Content section */
+  .content-section {
+    @apply relative z-10 flex-1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
   
-  /* Tag styling */
-  .tag {
-    @apply px-2 py-1 border border-off-white/30;
-    @apply text-xs font-mono uppercase tracking-wide;
-    @apply bg-graphite;
+  /* Card title */
+  .card-title {
+    @apply text-2xl font-bold;
+    @apply text-off-white;
+    @apply group-hover:text-cyber-cyan transition-colors;
+    @apply leading-tight;
+    /* leave space so title doesn't collide with sticker */
+    padding-right: 0;
   }
   
-  /* Link styling */
-  .link-brutal {
-    @apply text-off-white hover:text-cyber-cyan;
-    @apply transition-colors duration-150;
-    @apply font-semibold;
-  }
-  
-  /* Line clamp utility */
-  .line-clamp-3 {
+  /* Card description */
+  .card-description {
+    @apply font-mono text-sm text-off-white/80;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  
+  /* Tags container */
+  .tags-container {
+    @apply flex gap-2;
+    flex-wrap: wrap;
+    overflow: hidden;
+    max-height: 2rem;
+  }
+  
+  /* Tag */
+  .tag {
+    @apply px-2 py-1 border border-off-white/30;
+    @apply text-xs font-mono uppercase tracking-wide;
+    @apply bg-graphite;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  /* Links section */
+  .links-section {
+    @apply flex gap-4 text-sm font-mono;
+    @apply pt-4 mt-auto;
+    @apply border-t border-off-white/10;
+  }
+  
+  /* Link */
+  .link-brutal {
+    @apply text-off-white hover:text-cyber-cyan;
+    @apply transition-colors duration-150;
+    @apply font-semibold;
   }
 </style>
