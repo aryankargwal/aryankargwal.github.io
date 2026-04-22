@@ -304,51 +304,72 @@ try {
       });
     });
 
-    // Refresh Goodreads data on each page load (client-side) so updates do not need a site redeploy.
+    // Refresh Goodreads data on each user page load so updates don't need a site redeploy.
+    // Goodreads RSS blocks browser CORS, so we go through a proxy.
+    // We use the same regex-based XML parsing as the server-side code because Goodreads
+    // uses namespace-prefixed tags (e.g. <gr:author_name>) that DOMParser's querySelector
+    // cannot find by simple tag name.
+
     const section = document.querySelector('.currently-reading[data-goodreads-user-id]');
     const goodreadsUserId = section?.getAttribute('data-goodreads-user-id');
     const readingStat = document.querySelector('[data-stat-value="reading"]');
     const yearStat = document.querySelector('[data-stat-value="year"]');
 
-    // Proxy fallback for environments where Goodreads RSS blocks browser CORS.
-    const proxyRaw = (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-
-    const getText = (parent, tag) => {
-      const node = parent.querySelector(tag);
-      return node && node.textContent ? node.textContent.trim() : '';
+    // Extract a tag's text content from a raw XML string (handles CDATA and plain text).
+    const extractXML = (xml, tag) => {
+      const pattern = new RegExp(
+        `<${tag}><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${tag}>|<${tag}>([^<]*)<\\/${tag}>`
+      );
+      const match = xml.match(pattern);
+      return match ? (match[1] || match[2] || '').trim() : '';
     };
 
-    const parseBookItem = (item) => {
-      const title = getText(item, 'title');
-      const author = getText(item, 'author_name') || 'Unknown';
-      const link = getText(item, 'link') || '#';
-      const coverUrl =
-        getText(item, 'book_large_image_url') ||
-        getText(item, 'book_medium_image_url') ||
-        getText(item, 'book_image_url');
-      return { title, author, link, coverUrl };
-    };
-
-    const fetchShelfXml = async (url, shelfLabel) => {
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${shelfLabel} shelf from Goodreads (${url}): HTTP ${response.status}`);
+    // Try allorigins first, fall back to corsproxy.io.
+    const fetchShelfXml = async (url) => {
+      const proxies = [
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+        `https://corsproxy.io/?${encodeURIComponent(url)}`,
+      ];
+      for (const proxy of proxies) {
+        try {
+          const res = await fetch(proxy);
+          if (res.ok) return res.text();
+        } catch (_) {
+          // try next proxy
         }
-        return response.text();
-      } catch (_directFetchError) {
-        const proxyUrl = proxyRaw(url);
-        const response = await fetch(proxyUrl);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${shelfLabel} shelf via proxy (${proxyUrl}): HTTP ${response.status}`);
-        }
-        return response.text();
       }
+      throw new Error('All Goodreads proxies failed');
+    };
+
+    const parseItems = (xmlText) => {
+      const rawItems = xmlText.split('<item>');
+      const items = [];
+      for (let i = 1; i < rawItems.length; i++) {
+        const chunk = '<item>' + rawItems[i].split('</item>')[0] + '</item>';
+        const title = extractXML(chunk, 'title');
+        if (!title) continue;
+        const author = extractXML(chunk, 'author_name');
+        const link = extractXML(chunk, 'link');
+        let coverUrl = extractXML(chunk, 'book_large_image_url');
+        if (!coverUrl) coverUrl = extractXML(chunk, 'book_medium_image_url');
+        if (!coverUrl) coverUrl = extractXML(chunk, 'book_image_url');
+        const readAt = extractXML(chunk, 'user_read_at');
+        const numPagesMatch = chunk.match(/<num_pages>(\d+)<\/num_pages>/);
+        items.push({
+          title,
+          author: author || 'Unknown',
+          link: link || '#',
+          coverUrl,
+          readAt,
+          numPages: numPagesMatch ? parseInt(numPagesMatch[1]) : 0,
+        });
+      }
+      return items;
     };
 
     const createBookCard = (book) => {
       const anchor = document.createElement('a');
-      anchor.href = book.link || '#';
+      anchor.href = book.link;
       anchor.target = '_blank';
       anchor.rel = 'noopener';
       anchor.className = 'book-card';
@@ -356,7 +377,7 @@ try {
       if (book.coverUrl) {
         const img = document.createElement('img');
         img.src = book.coverUrl;
-        img.alt = book.title || 'Book cover';
+        img.alt = book.title;
         img.className = 'book-cover';
         img.loading = 'lazy';
         anchor.appendChild(img);
@@ -365,16 +386,16 @@ try {
       const info = document.createElement('div');
       info.className = 'book-info';
 
-      const title = document.createElement('p');
-      title.className = 'book-title font-mono text-xs font-semibold line-clamp-2 mb-1';
-      title.textContent = book.title || 'Untitled';
-      info.appendChild(title);
+      const titleEl = document.createElement('p');
+      titleEl.className = 'book-title font-mono text-xs font-semibold line-clamp-2 mb-1';
+      titleEl.textContent = book.title;
+      info.appendChild(titleEl);
 
       if (book.author) {
-        const author = document.createElement('p');
-        author.className = 'book-author font-mono text-xs text-off-white/60';
-        author.textContent = book.author;
-        info.appendChild(author);
+        const authorEl = document.createElement('p');
+        authorEl.className = 'book-author font-mono text-xs text-off-white/60';
+        authorEl.textContent = book.author;
+        info.appendChild(authorEl);
       }
 
       anchor.appendChild(info);
@@ -383,15 +404,13 @@ try {
 
     const renderBooks = (container, books, emptyMessage) => {
       if (!container) return;
-
-      if (!books || books.length === 0) {
+      if (!books.length) {
         const p = document.createElement('p');
         p.className = 'font-mono text-sm text-off-white/60';
         p.textContent = emptyMessage;
         container.replaceChildren(p);
         return;
       }
-
       const grid = document.createElement('div');
       grid.className = 'books-grid';
       books.forEach((book) => grid.appendChild(createBookCard(book)));
@@ -402,52 +421,39 @@ try {
       if (!goodreadsUserId) return;
 
       const currentUrl = `https://www.goodreads.com/review/list_rss/${goodreadsUserId}?shelf=currently-reading`;
-      const readUrl = `https://www.goodreads.com/review/list_rss/${goodreadsUserId}?shelf=read`;
+      const readUrl   = `https://www.goodreads.com/review/list_rss/${goodreadsUserId}?shelf=read`;
 
       try {
-        const [currentlyReadingXml, readXml] = await Promise.all([
-          fetchShelfXml(currentUrl, 'currently-reading'),
-          fetchShelfXml(readUrl, 'read')
+        const [currentXml, readXml] = await Promise.all([
+          fetchShelfXml(currentUrl),
+          fetchShelfXml(readUrl),
         ]);
 
-        const parser = new DOMParser();
-        const currentDoc = parser.parseFromString(currentlyReadingXml, 'text/xml');
-        const readDoc = parser.parseFromString(readXml, 'text/xml');
+        const currentItems = parseItems(currentXml);
+        const readItems    = parseItems(readXml);
 
-        const currentItems = Array.from(currentDoc.querySelectorAll('item'));
-        const readItems = Array.from(readDoc.querySelectorAll('item'));
-
-        const currentlyReadingBooks = currentItems
-          .map((item) => parseBookItem(item))
-          .filter((book) => book.title && book.coverUrl);
+        const currentlyReadingBooks = currentItems.filter((b) => b.title && b.coverUrl);
 
         const currentYear = new Date().getFullYear();
         let booksReadThisYearCount = 0;
         const booksReadThisYear = [];
 
-        readItems.forEach((item) => {
-          const readAt = getText(item, 'user_read_at');
-          if (!readAt) return;
-          const readDate = new Date(readAt);
-          if (readDate.getFullYear() !== currentYear) return;
-
-          booksReadThisYearCount += 1;
-          const book = parseBookItem(item);
-          const title = book.title;
-          if (!title) return;
-
-          if (book.coverUrl) {
-            booksReadThisYear.push(book);
-          }
-        });
+        for (const book of readItems) {
+          if (!book.readAt) continue;
+          if (new Date(book.readAt).getFullYear() !== currentYear) continue;
+          booksReadThisYearCount++;
+          if (book.title && book.coverUrl) booksReadThisYear.push(book);
+        }
 
         if (readingStat) readingStat.textContent = String(currentlyReadingBooks.length);
-        if (yearStat) yearStat.textContent = String(booksReadThisYearCount);
+        if (yearStat)    yearStat.textContent    = String(booksReadThisYearCount);
 
         renderBooks(readingContainer, currentlyReadingBooks, 'No books currently being read. Check back later!');
         renderBooks(yearContainer, booksReadThisYear, 'No books read this year yet. Check back later!');
+
+        console.log(`✓ Goodreads refreshed: ${currentlyReadingBooks.length} reading, ${booksReadThisYearCount} read this year`);
       } catch (error) {
-        console.error('✗ Failed to refresh Goodreads books on client:', error);
+        console.error('✗ Goodreads client refresh failed (showing build-time data):', error);
       }
     };
 
