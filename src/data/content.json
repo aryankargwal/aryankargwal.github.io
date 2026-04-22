@@ -211,16 +211,43 @@
        "excerpt": "How constraints and frugal innovation principles lead to better, more efficient AI products in competitive markets.",
        "featured": true
      },
-     {
-       "title": "Observability-Driven Sandboxing",
-       "platform": "Arize AI",
-       "category": "Security",
-       "url": "https://arize.com/blog/how-observability-driven-sandboxing-secures-ai-agents/",
-       "date": "2026-01-22",
-       "excerpt": "Securing AI agents through observability-driven sandboxing: techniques for monitoring and controlling agent behavior.",
-       "featured": true
-     }
-   ],
+      {
+        "title": "Observability-Driven Sandboxing",
+        "platform": "Arize AI",
+        "category": "Security",
+        "url": "https://arize.com/blog/how-observability-driven-sandboxing-secures-ai-agents/",
+        "date": "2026-01-22",
+        "excerpt": "Securing AI agents through observability-driven sandboxing: techniques for monitoring and controlling agent behavior.",
+        "featured": true
+      },
+      {
+        "title": "Rented AI and Hidden Costs",
+        "platform": "Pipeshift",
+        "category": "Strategy",
+        "url": "https://pipeshift.com/all-posts/rented-ai-hidden-costs",
+        "date": "2026-02-04",
+        "excerpt": "An analysis of the hidden operational and business costs teams face when relying on rented AI stacks without strong infrastructure ownership.",
+        "featured": true
+      },
+      {
+        "title": "Understanding Latency in AI Model Deployment",
+        "platform": "Pipeshift",
+        "category": "Engineering",
+        "url": "https://pipeshift.com/all-posts/understanding-latency-in-ai-model-deployment",
+        "date": "2026-02-08",
+        "excerpt": "A practical breakdown of where latency comes from in deployed AI systems and how teams can reduce bottlenecks across the inference path.",
+        "featured": true
+      },
+      {
+        "title": "Best AI Observability Tools for Autonomous Agents in 2026",
+        "platform": "Arize AI",
+        "category": "Tools & Platforms",
+        "url": "https://arize.com/blog/best-ai-observability-tools-for-autonomous-agents-in-2026/",
+        "date": "2026-02-12",
+        "excerpt": "A comparative look at leading observability tools for autonomous AI agents, with evaluation criteria for production deployment in 2026.",
+        "featured": true
+      }
+    ],
 
    "technical_blogs": [
      {

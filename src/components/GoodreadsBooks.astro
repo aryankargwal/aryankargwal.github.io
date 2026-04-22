@@ -159,7 +159,7 @@ try {
 }
 ---
 
-<section class="currently-reading">
+<section class="currently-reading" data-goodreads-user-id={GOODREADS_USER_ID}>
   <div class="section-header-inline">
     <h3 class="text-3xl font-black mb-6 text-off-white">
       <span class="text-acid-lime">[</span>
@@ -181,13 +181,13 @@ try {
     <div class="stats-box">
       <div class="stat-tabs">
         <button class="stat-tab active" data-stat="reading">
-          <div class="stat-number" data-value={stats.currentlyReading}>
+          <div class="stat-number" data-value={stats.currentlyReading} data-stat-value="reading">
             {stats.currentlyReading}
           </div>
           <div class="stat-label">Currently Reading</div>
         </button>
         <button class="stat-tab" data-stat="year">
-          <div class="stat-number" data-value={stats.booksReadThisYear}>
+          <div class="stat-number" data-value={stats.booksReadThisYear} data-stat-value="year">
             {stats.booksReadThisYear}
           </div>
           <div class="stat-label">Read This Year</div>
@@ -303,6 +303,147 @@ try {
         }
       });
     });
+
+    // Refresh Goodreads data on each page load (client-side) so updates do not need a site redeploy.
+    const section = document.querySelector('.currently-reading[data-goodreads-user-id]');
+    const goodreadsUserId = section?.getAttribute('data-goodreads-user-id');
+    const readingStat = document.querySelector('[data-stat-value="reading"]');
+    const yearStat = document.querySelector('[data-stat-value="year"]');
+
+    const proxyRaw = (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+
+    const getText = (parent, tag) => {
+      const node = parent.querySelector(tag);
+      return node && node.textContent ? node.textContent.trim() : '';
+    };
+
+    const createBookCard = (book) => {
+      const anchor = document.createElement('a');
+      anchor.href = book.link || '#';
+      anchor.target = '_blank';
+      anchor.rel = 'noopener';
+      anchor.className = 'book-card';
+
+      if (book.coverUrl) {
+        const img = document.createElement('img');
+        img.src = book.coverUrl;
+        img.alt = book.title || 'Book cover';
+        img.className = 'book-cover';
+        img.loading = 'lazy';
+        anchor.appendChild(img);
+      }
+
+      const info = document.createElement('div');
+      info.className = 'book-info';
+
+      const title = document.createElement('p');
+      title.className = 'book-title font-mono text-xs font-semibold line-clamp-2 mb-1';
+      title.textContent = book.title || 'Untitled';
+      info.appendChild(title);
+
+      if (book.author) {
+        const author = document.createElement('p');
+        author.className = 'book-author font-mono text-xs text-off-white/60';
+        author.textContent = book.author;
+        info.appendChild(author);
+      }
+
+      anchor.appendChild(info);
+      return anchor;
+    };
+
+    const renderBooks = (container, books, emptyMessage) => {
+      if (!container) return;
+
+      if (!books || books.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'font-mono text-sm text-off-white/60';
+        p.textContent = emptyMessage;
+        container.replaceChildren(p);
+        return;
+      }
+
+      const grid = document.createElement('div');
+      grid.className = 'books-grid';
+      books.forEach((book) => grid.appendChild(createBookCard(book)));
+      container.replaceChildren(grid);
+    };
+
+    const refreshGoodreads = async () => {
+      if (!goodreadsUserId) return;
+
+      const currentUrl = `https://www.goodreads.com/review/list_rss/${goodreadsUserId}?shelf=currently-reading`;
+      const readUrl = `https://www.goodreads.com/review/list_rss/${goodreadsUserId}?shelf=read`;
+
+      try {
+        const [currentlyReadingXml, readXml] = await Promise.all([
+          fetch(proxyRaw(currentUrl)).then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+          }),
+          fetch(proxyRaw(readUrl)).then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+          })
+        ]);
+
+        const parser = new DOMParser();
+        const currentDoc = parser.parseFromString(currentlyReadingXml, 'text/xml');
+        const readDoc = parser.parseFromString(readXml, 'text/xml');
+
+        const currentItems = Array.from(currentDoc.querySelectorAll('item'));
+        const readItems = Array.from(readDoc.querySelectorAll('item'));
+
+        const currentlyReadingBooks = currentItems
+          .map((item) => {
+            const title = getText(item, 'title');
+            const author = getText(item, 'author_name') || 'Unknown';
+            const link = getText(item, 'link') || '#';
+            const coverUrl =
+              getText(item, 'book_large_image_url') ||
+              getText(item, 'book_medium_image_url') ||
+              getText(item, 'book_image_url');
+            return { title, author, link, coverUrl };
+          })
+          .filter((book) => book.title && book.coverUrl);
+
+        const currentYear = new Date().getFullYear();
+        let booksReadThisYearCount = 0;
+        const booksReadThisYear = [];
+
+        readItems.forEach((item) => {
+          const readAt = getText(item, 'user_read_at');
+          if (!readAt) return;
+          const readDate = new Date(readAt);
+          if (readDate.getFullYear() !== currentYear) return;
+
+          booksReadThisYearCount += 1;
+          const title = getText(item, 'title');
+          if (!title) return;
+
+          const author = getText(item, 'author_name') || 'Unknown';
+          const link = getText(item, 'link') || '#';
+          const coverUrl =
+            getText(item, 'book_large_image_url') ||
+            getText(item, 'book_medium_image_url') ||
+            getText(item, 'book_image_url');
+
+          if (coverUrl) {
+            booksReadThisYear.push({ title, author, link, coverUrl });
+          }
+        });
+
+        if (readingStat) readingStat.textContent = String(currentlyReadingBooks.length);
+        if (yearStat) yearStat.textContent = String(booksReadThisYearCount);
+
+        renderBooks(readingContainer, currentlyReadingBooks, 'No books currently being read. Check back later!');
+        renderBooks(yearContainer, booksReadThisYear, 'No books read this year yet. Check back later!');
+      } catch (error) {
+        console.error('✗ Failed to refresh Goodreads books on client:', error);
+      }
+    };
+
+    refreshGoodreads();
   </script>
 </section>
 
