@@ -310,11 +310,40 @@ try {
     const readingStat = document.querySelector('[data-stat-value="reading"]');
     const yearStat = document.querySelector('[data-stat-value="year"]');
 
+    // Proxy fallback for environments where Goodreads RSS blocks browser CORS.
     const proxyRaw = (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
 
     const getText = (parent, tag) => {
       const node = parent.querySelector(tag);
       return node && node.textContent ? node.textContent.trim() : '';
+    };
+
+    const parseBookItem = (item) => {
+      const title = getText(item, 'title');
+      const author = getText(item, 'author_name') || 'Unknown';
+      const link = getText(item, 'link') || '#';
+      const coverUrl =
+        getText(item, 'book_large_image_url') ||
+        getText(item, 'book_medium_image_url') ||
+        getText(item, 'book_image_url');
+      return { title, author, link, coverUrl };
+    };
+
+    const fetchShelfXml = async (url, shelfLabel) => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch ${shelfLabel} shelf from Goodreads (${url}): HTTP ${response.status}`);
+        }
+        return response.text();
+      } catch (_directFetchError) {
+        const proxyUrl = proxyRaw(url);
+        const response = await fetch(proxyUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch ${shelfLabel} shelf via proxy (${proxyUrl}): HTTP ${response.status}`);
+        }
+        return response.text();
+      }
     };
 
     const createBookCard = (book) => {
@@ -377,14 +406,8 @@ try {
 
       try {
         const [currentlyReadingXml, readXml] = await Promise.all([
-          fetch(proxyRaw(currentUrl)).then((r) => {
-            if (!r.ok) throw new Error(`HTTP ${r.status}`);
-            return r.text();
-          }),
-          fetch(proxyRaw(readUrl)).then((r) => {
-            if (!r.ok) throw new Error(`HTTP ${r.status}`);
-            return r.text();
-          })
+          fetchShelfXml(currentUrl, 'currently-reading'),
+          fetchShelfXml(readUrl, 'read')
         ]);
 
         const parser = new DOMParser();
@@ -395,16 +418,7 @@ try {
         const readItems = Array.from(readDoc.querySelectorAll('item'));
 
         const currentlyReadingBooks = currentItems
-          .map((item) => {
-            const title = getText(item, 'title');
-            const author = getText(item, 'author_name') || 'Unknown';
-            const link = getText(item, 'link') || '#';
-            const coverUrl =
-              getText(item, 'book_large_image_url') ||
-              getText(item, 'book_medium_image_url') ||
-              getText(item, 'book_image_url');
-            return { title, author, link, coverUrl };
-          })
+          .map((item) => parseBookItem(item))
           .filter((book) => book.title && book.coverUrl);
 
         const currentYear = new Date().getFullYear();
@@ -418,18 +432,12 @@ try {
           if (readDate.getFullYear() !== currentYear) return;
 
           booksReadThisYearCount += 1;
-          const title = getText(item, 'title');
+          const book = parseBookItem(item);
+          const title = book.title;
           if (!title) return;
 
-          const author = getText(item, 'author_name') || 'Unknown';
-          const link = getText(item, 'link') || '#';
-          const coverUrl =
-            getText(item, 'book_large_image_url') ||
-            getText(item, 'book_medium_image_url') ||
-            getText(item, 'book_image_url');
-
-          if (coverUrl) {
-            booksReadThisYear.push({ title, author, link, coverUrl });
+          if (book.coverUrl) {
+            booksReadThisYear.push(book);
           }
         });
 
