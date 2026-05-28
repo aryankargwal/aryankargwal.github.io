@@ -251,6 +251,15 @@
 
    "technical_blogs": [
      {
+       "title": "Agent evaluation metrics: how to measure whether an agent works",
+       "platform": "Arize AI",
+       "category": "Agent Ops",
+       "url": "https://arize.com/resource-hub/agent-evaluation-metrics/",
+       "date": "2026-05-28",
+       "excerpt": "Learn how to measure whether an agent works through effective evaluation metrics and methodologies.",
+       "featured": true
+     },
+     {
        "title": "Top 7 Agent Supervision Platforms",
        "platform": "Dev.to",
        "category": "Agent Ops",
