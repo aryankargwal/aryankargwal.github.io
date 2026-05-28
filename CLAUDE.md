@@ -65,6 +65,10 @@ Edit `src/data/content.json` and add an entry to the correct section.
 4. Commit with message: `content: add <title>`
 5. Push to `master`
 
+## Git Commits
+
+Do **not** add `Co-Authored-By: Claude` trailers to commit messages. Just use a plain commit message with no attribution lines.
+
 ## What NOT to do
 - Do not add entries to `src/content/blog/` — that collection is not rendered anywhere on the site
 - Do not edit `astro.config.mjs`, `tailwind.config.mjs`, or any config file
