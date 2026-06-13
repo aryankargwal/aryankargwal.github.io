@@ -525,7 +525,7 @@ try {
     @apply shadow-hard hover:shadow-hard-cyan;
     @apply transition-all duration-200;
     @apply cursor-pointer;
-    @apply relative;
+    @apply relative overflow-hidden;
     filter: none !important;
   }
 
@@ -561,11 +561,12 @@ try {
    }
 
   .book-cover {
-    @apply w-full h-auto;
-    @apply border-b-brutal border-black;
+    @apply w-full;
+    display: block;
     aspect-ratio: 2/3;
     object-fit: cover;
     filter: none;
+    @apply border-b-brutal border-black;
   }
 
   .book-info {
