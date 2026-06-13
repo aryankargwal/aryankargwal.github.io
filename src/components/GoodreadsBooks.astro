@@ -208,13 +208,14 @@ try {
                  class="book-card"
                >
                  {book.coverUrl && (
-                   <img 
-                     src={book.coverUrl} 
-                     alt={book.title}
-                     class="book-cover"
-                     loading="lazy"
-                     style="filter: none; saturate: 100%;"
-                   />
+                   <div class="book-cover-wrapper">
+                     <img
+                       src={book.coverUrl}
+                       alt={book.title}
+                       class="book-cover"
+                       loading="lazy"
+                     />
+                   </div>
                  )}
                  <div class="book-info">
                    <p class="book-title font-mono text-xs font-semibold line-clamp-2 mb-1">
@@ -250,12 +251,14 @@ try {
                  class="book-card"
                >
                  {book.coverUrl && (
-                   <img 
-                     src={book.coverUrl} 
-                     alt={book.title}
-                     class="book-cover"
-                     loading="lazy"
-                   />
+                   <div class="book-cover-wrapper">
+                     <img
+                       src={book.coverUrl}
+                       alt={book.title}
+                       class="book-cover"
+                       loading="lazy"
+                     />
+                   </div>
                  )}
                  <div class="book-info">
                    <p class="book-title font-mono text-xs font-semibold line-clamp-2 mb-1">
@@ -375,12 +378,15 @@ try {
       anchor.className = 'book-card';
 
       if (book.coverUrl) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'book-cover-wrapper';
         const img = document.createElement('img');
         img.src = book.coverUrl;
         img.alt = book.title;
         img.className = 'book-cover';
         img.loading = 'lazy';
-        anchor.appendChild(img);
+        wrapper.appendChild(img);
+        anchor.appendChild(wrapper);
       }
 
       const info = document.createElement('div');
@@ -560,13 +566,23 @@ try {
      @apply uppercase tracking-wider font-bold;
    }
 
-  .book-cover {
-    @apply w-full;
-    display: block;
-    aspect-ratio: 2/3;
-    object-fit: cover;
-    filter: none;
+  .book-cover-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 150%; /* 2:3 ratio — height = 1.5 × width */
+    overflow: hidden;
     @apply border-b-brutal border-black;
+  }
+
+  .book-cover {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    filter: none;
   }
 
   .book-info {
