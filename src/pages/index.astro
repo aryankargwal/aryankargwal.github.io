@@ -137,6 +137,52 @@ const blogsWithGrids = featuredBlogs.map(blog => {
       </div>
     </section>
 
+    <!-- Selected Achievements -->
+    <section id="achievements" class="section-brutal achievements-section">
+      <div class="container-brutal">
+        <div class="section-header achievements-header">
+          <h2 class="section-title">
+            <span class="title-bracket">[</span>
+            SELECTED ACHIEVEMENTS
+            <span class="title-bracket">]</span>
+          </h2>
+          <p class="font-mono text-off-white/60">
+            Robotics, AI safety & research recognition
+          </p>
+        </div>
+
+        <div class="achievements-grid">
+          <article class="achievement-card achievement-card-cyan">
+            <span class="achievement-index">01</span>
+            <p class="achievement-label">Mila · 2026</p>
+            <h3>First Place — Rough-Terrain Quadruped Challenge</h3>
+            <p>Won the Montréal Robotics Summer School challenge by training a quadruped locomotion policy to traverse difficult terrain in an intensive three-day build.</p>
+          </article>
+
+          <article class="achievement-card achievement-card-lime">
+            <span class="achievement-index">02</span>
+            <p class="achievement-label">CIFAR · 2026</p>
+            <h3>Selected Participant — AI Frontiers School: AI Safety Edition</h3>
+            <p>Selected for CIFAR's interdisciplinary AI safety program for early-stage PhD and advanced master's researchers.</p>
+          </article>
+
+          <article class="achievement-card achievement-card-purple">
+            <span class="achievement-index">03</span>
+            <p class="achievement-label">Mitacs · 2022</p>
+            <h3>Globalink Research Internship</h3>
+            <p>Completed a funded international research internship at INRS, investigating semantic segmentation for geospatial and Arctic imagery.</p>
+          </article>
+
+          <article class="achievement-card achievement-card-coral">
+            <span class="achievement-index">04</span>
+            <p class="achievement-label">Mitacs · 2023</p>
+            <h3>Globalink Graduate Fellowship</h3>
+            <p>Awarded a graduate fellowship to continue research in Canada following the Globalink Research Internship.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- Featured Blogs Grid -->
     <section class="section-brutal">
       <div class="container-brutal">
@@ -346,6 +392,67 @@ const blogsWithGrids = featuredBlogs.map(blog => {
   .section-title {
     @apply text-3xl font-black mb-4;
     @apply text-off-white;
+  }
+
+  /* Achievements */
+  .achievements-section {
+    @apply pt-4;
+  }
+
+  .achievements-header {
+    @apply mb-10;
+  }
+
+  .achievements-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  }
+
+  .achievement-card {
+    @apply relative overflow-hidden;
+    @apply bg-dark-grey border-brutal border-black shadow-hard;
+    @apply p-7 min-h-64;
+    @apply transition-all duration-300;
+  }
+
+  .achievement-card:hover {
+    @apply -translate-y-1;
+  }
+
+  .achievement-index {
+    @apply absolute top-4 right-5;
+    @apply font-mono text-5xl font-black text-off-white/10;
+  }
+
+  .achievement-label {
+    @apply relative z-10 inline-block mb-5 px-3 py-1;
+    @apply font-mono text-xs font-bold uppercase tracking-wider text-black;
+    @apply border border-black;
+  }
+
+  .achievement-card h3 {
+    @apply relative z-10 max-w-lg mb-4;
+    @apply text-2xl font-black leading-tight text-off-white;
+  }
+
+  .achievement-card p:last-child {
+    @apply relative z-10 max-w-xl;
+    @apply text-sm leading-relaxed text-off-white/75;
+  }
+
+  .achievement-card-cyan .achievement-label {
+    @apply bg-cyber-cyan;
+  }
+
+  .achievement-card-lime .achievement-label {
+    @apply bg-acid-lime;
+  }
+
+  .achievement-card-purple .achievement-label {
+    @apply bg-purple-500 text-off-white;
+  }
+
+  .achievement-card-coral .achievement-label {
+    @apply bg-[#ff6b6b];
   }
   
   .title-bracket {

@@ -251,12 +251,39 @@
 
    "technical_blogs": [
      {
+       "title": "Agent observability: how to trace, debug, and improve AI agents",
+       "platform": "Arize AI",
+       "category": "Agent Ops",
+       "url": "https://arize.com/guides/ai-agent-handbook/agent-observability/",
+       "date": "2026-08-06",
+       "excerpt": "A practical guide to capturing agent traces, connecting execution across sessions, and using evaluations to diagnose and improve production AI agents.",
+       "featured": true
+     },
+     {
        "title": "Agent evaluation metrics: how to measure whether an agent works",
        "platform": "Arize AI",
        "category": "Agent Ops",
-       "url": "https://arize.com/resource-hub/agent-evaluation-metrics/",
-       "date": "2026-05-28",
-       "excerpt": "Learn how to measure and evaluate AI agent performance effectively with key metrics and methodologies.",
+       "url": "https://arize.com/guides/ai-agent-handbook/agent-evaluation-metrics/",
+       "date": "2026-08-11",
+       "excerpt": "A framework for choosing outcome, quality, cost, safety, behavior, and performance metrics that demonstrate whether an agent is actually completing its job.",
+       "featured": true
+     },
+     {
+       "title": "How to evaluate AI agents: a production workflow",
+       "platform": "Arize AI",
+       "category": "Agent Ops",
+       "url": "https://arize.com/guides/ai-agent-handbook/agent-evaluation/",
+       "date": "2026-08-01",
+       "excerpt": "A production workflow for evaluating agent outcomes, trajectories, individual decisions, and reliability, then turning failures into regression tests.",
+       "featured": true
+     },
+     {
+       "title": "AI agent frameworks compared: LangGraph, CrewAI, AutoGen, and more",
+       "platform": "Arize AI",
+       "category": "Architecture",
+       "url": "https://arize.com/guides/ai-agent-handbook/agent-frameworks/",
+       "date": "2026-08-01",
+       "excerpt": "A practical comparison of agent SDKs, orchestration runtimes, harnesses, and managed platforms for production AI systems.",
        "featured": true
      },
      {
